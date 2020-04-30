@@ -13,15 +13,19 @@
 </head>
 
 <body>
-    <!-- facebook login -->
+    <a href="#" onclick="logout()">Logout</a>
+    <h1 style="text-align: center">Hello, World!</h1>
+    <div id="profile"></div>
 
+    <!-- facebook login -->
     <script>
         window.fbAsyncInit = function () {
             FB.init({
-                appId: '243240056787926',
+                {% comment %}appId: '243240056787926',{% endcomment %}
+                appId: '735133187228573',
                 cookie: true,
                 xfbml: true,
-                version: 'v2.0'
+                version: 'v6.0'
             });
 
             FB.getLoginStatus(function (response) {
@@ -38,24 +42,41 @@
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
 
+        var accessToken
+
         function statusChangeCallback(response) {
-            if (response.status == 'connected') {
-                console.log('user is already loggedin')
+            if (response.status === 'connected') {
+                accessToken = response.authResponse.accessToken
+                console.log('Logged In and Authenticated')
                 FB.api(
                     '/me',
                     'GET',
-                    { "fields": "id,name,birthday,gender,email,location" },
+                    { "fields": "id, name, birthday, gender, email, location" },
                     function (response) {
                         console.log(response)
+                        buildProfile(response)
                     }
                 );
             }
             else {
-                console.log('plzz login first')
+                console.log('Please Login First')
             }
         }
 
 
+        function buildProfile(user) {
+            let profile = `
+                <h3>${user.name}</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">User: ${user.id}</li>
+                    <li class="list-group-item">Email: ${user.email}</li>
+                    <li class="list-group-item">Birthday: ${user.birthday}</li>
+                    <li class="list-group-item">Location: ${user.location.name}</li>
+                    <li class="list-group-item">Token: ${accessToken}</li>
+                </ul>
+            `;
+            document.getElementById('profile').innerHTML = profile;
+        }
 
 
         function checkLoginState() {
@@ -63,14 +84,15 @@
                 statusChangeCallback(response);
             });
         }
+        
+        function logout() {
+            FB.logout(function (response) {
+                console.log('Logged Out')
+            })
+        }
     </script>
 
-
-
-    <h1 style="text-align: center">Hello, World!</h1>
-
-
-    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+    <fb:login-button scope="public_profile, email, user_location, user_birthday,manage_pages,publish_pages" onlogin="checkLoginState();"></fb:login-button>
 
     <div class="status">
 

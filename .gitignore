@@ -1,3 +1,4 @@
 # Project exclude paths
 /venv/
 /zets/migrations/
+db.sqlite3
