@@ -8,7 +8,9 @@ from .forms import SignUpForm
 
 
 def home(request):
-    return render(request, 'zets/index.html')
+    register_form = SignUpForm
+    context = {'form': register_form}
+    return render(request, 'zets/index.html', context)
 
 
 def logout_request(request):
@@ -49,7 +51,8 @@ def register(request):
             message = "We very much appreciated you business.\nWe will be in touch soon."
             from_email = settings.EMAIL_HOST_USER
             to_list = [obj.email, from_email]
-            send_mail(subject, message, from_email, to_list, fail_silently=True)
+            send_mail(subject, message, from_email,
+                      to_list, fail_silently=True)
             register_form = SignUpForm
         else:
             print(register_form.errors)
