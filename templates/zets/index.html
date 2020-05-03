@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
 {% load static %}
 
 <head>
@@ -21,11 +20,10 @@
 </head>
 
 <body>
-
     <div class="wrapper">
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="#">Zeta Share</a>
+                <a class="navbar-brand" href={% url 'main:home' %}>Zeta Share</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -35,7 +33,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav m-auto" id="app-nav">
                         <li class="nav-item active mx-3">
-                            <a class="nav-link" href="#">Home</a>
+                            <a class="nav-link" href={% url 'main:home' %}>Home</a>
                         </li>
                         <li class="nav-item mx-3">
                             <a class="nav-link" href="#">About us</a>
@@ -87,16 +85,29 @@
             </nav>
         </header>
 
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
         <div class="section-0">
             <div class="login-sidebar h-100">
                 <div class="sidebar-position p-4">
                     <div id="sider-data">
 
                         <div class="auth-data">
-                            <form id="auth-data" onsubmit="return loginSubmit()">
-                                <input type="text" id="loginemail" placeholder="Email" name="userEmail">
-                                <p class="emailerror"></p>
-                                <input type="password" id="loginpass" placeholder="password" name="userPassword">
+
+                            <form id="auth-data" method="post" action={% url 'main:login' %}>
+                                {% csrf_token %}
+                                {{ login.username }}
+                                {{ login.password }}
+
+
                                 <button class="authbar-button btn -btn-primary w-100"
                                     style="color:white;background:#cd2828">Login</button>
                                 <a href="#" id='signup'>click for sign up</a>
@@ -104,24 +115,32 @@
                         </div>
 
                         <div class="signup-user">
-                            <form id="signup-user" onsubmit="return Signupvalidation()">
 
-                                {{form.first_name}}
-                                {{form.last_name}}
-                                {{form.username}}
-                                {{form.email}}
-                                {{form.password1}}
-                                {{form.password2}}
+                            <form id="signup-user" method="post" action={% url 'main:register' %}>
+                                {% csrf_token %}
+                                {{ signup.first_name }}
+                                {{ signup.last_name }}
+                                {{ signup.username }}
+                                {{ signup.email }}
+                                {{ signup.password1 }}
+                                {{ signup.password2 }}
                                 <p id="password2err"
                                     style=" display: none; color: red; position: absolute;font-size: 10px;top: 294px;font-weight: 600;">
                                     password not match
                                 </p>
                                 <button class="authbar-button btn -btn-primary w-100"
                                     style="color:white;background:#cd2828">Sign Up</button>
+
+                            
+                                
+
                                 <label class="log"> click here for <a id="login" class="pl-1" style="color: black;">
                                         login</a></label>
                             </form>
                         </div>
+
+
+                       
 
                         <div class="fb-login-button mt-3" data-size="large" data-button-type="continue_with"
                             data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"
@@ -131,6 +150,7 @@
                         <div class="g-signin2 mt-3" id="googleauth">
                         </div>
                         </ul>
+
                     </div>
                 </div>
             </div>
@@ -158,12 +178,14 @@
                 </div>
             </div>
         </div>
+    </div>
 
         <!-- bootstrap and jquery -->
         <script src="{% static 'js/jquery-3.4.0.min.js' %}"></script>
         <script src="{% static 'js/bootstrap.js' %}"></script>
         <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
         <script src="{% static 'js/myapp.js' %}"></script>
+
 </body>
 
 </html>

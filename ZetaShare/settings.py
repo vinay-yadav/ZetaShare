@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from django.contrib import messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -86,9 +87,16 @@ DATABASES = {
 # Email Configration
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'email@gmail.com'
-EMAIL_HOST_PASSWORD = 'password'
+EMAIL_HOST_USER = '1996vinayofficial@gmail.com'
+EMAIL_HOST_PASSWORD = 'vindroid1508'
 EMAIL_PORT = 587
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+# Changing Message Error Value
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}
 
 
 # Password validation
