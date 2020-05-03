@@ -7,12 +7,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id"
+        content="322840290434-h5oqtcm5gq8vr8l5b6gt6cfdeim7srp5.apps.googleusercontent.com">
     <title>Zeta Share</title>
     <!-- css -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <!-- icons -->
     <link rel="stylesheet" href="{% static 'css/boxicons.min.css' %}">
+    <!-- social authentication -->
+    <script src="{% static 'js/socialauth.js' %}"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 </head>
 
 <body>
@@ -43,9 +48,40 @@
                         </li>
                     </ul>
                     <div class="auth-button" onclick="slidertoggle()">
+                        <div class="default-data">
+                            <img src="{% static 'images/profile.png' %}" alt="profilepic" id="profile-img" width="50px"
+                                height="50px" style="border: 3px solid #e0e0e0;border-radius: 50%;">
+                            <span class="text-muted" style="font: size 0.8rem;font: weight 600;">Login/Signup</span>
+                        </div>
+                    </div>
 
-                        <i class='bx bxs-user-circle' style="font-size:2.5rem;cursor: pointer;"></i>
+                    <!-- user signed -->
+                    <div class="btn-group" id="user-info" style="display:none">
+                        <button type="button" class="dropdown" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="true" style="border: 0;background: #f8f9fa;outline:none">
+                            <img src="{% static 'images/profile.png' %}" alt="profilepic" id="profile-img" width="50px"
+                                height="50px" style="border: 3px solid #e0e0e0;border-radius: 50%;">
+                            <span class="username" id="username">Vinay</span>
+                            <i class="bx bx-chevron-down" style="color:#151111"></i>
 
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
+                            style="position: absolute;will-change: transform;top: 0px;left: 0px;transform: translate3d(-22px, 56px, 0px);">
+
+                            <a class="dropdown-item" href="#">
+                                <i class="bx bx-user bx-flip-horizontal"></i>
+                                <span>Profile</span>
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="bx bx-wrench bx-tada bx-flip-horizontal"></i>
+                                <span>Setting</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item glog">
+                                <i class="bx bx-power-off bx-flip-horizontal"></i>
+                                <span>Logout</span>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -57,9 +93,10 @@
                     <div id="sider-data">
 
                         <div class="auth-data">
-                            <form id="auth-data">
-                                <input type="text" placeholder="Email" name="userEmail">
-                                <input type="password" placeholder="password" name="userPassword">
+                            <form id="auth-data" onsubmit="return loginSubmit()">
+                                <input type="text" id="loginemail" placeholder="Email" name="userEmail">
+                                <p class="emailerror"></p>
+                                <input type="password" id="loginpass" placeholder="password" name="userPassword">
                                 <button class="authbar-button btn -btn-primary w-100"
                                     style="color:white;background:#cd2828">Login</button>
                                 <a href="#" id='signup'>click for sign up</a>
@@ -67,7 +104,7 @@
                         </div>
 
                         <div class="signup-user">
-                            <form id="signup-user">
+                            <form id="signup-user" onsubmit="return Signupvalidation()">
 
                                 {{form.first_name}}
                                 {{form.last_name}}
@@ -75,24 +112,24 @@
                                 {{form.email}}
                                 {{form.password1}}
                                 {{form.password2}}
+                                <p id="password2err"
+                                    style=" display: none; color: red; position: absolute;font-size: 10px;top: 294px;font-weight: 600;">
+                                    password not match
+                                </p>
+                                <button class="authbar-button btn -btn-primary w-100"
+                                    style="color:white;background:#cd2828">Sign Up</button>
                                 <label class="log"> click here for <a id="login" class="pl-1" style="color: black;">
                                         login</a></label>
                             </form>
                         </div>
 
-                        <button class="authbar-button btn w-100 mt-3"
-                            style="background: #0e55a0;border-color: #0e55a0;">
-                            <img src="{% static 'images/icons8-facebook-50.png' %}" alt="facebook icon" width="25px"
-                                class="mr-2">
-                            Facebook Login
-                        </button>
-                        <button class="authbar-button btn w-100 mt-3"
-                            style="background: #e83434;border-color: #e83434;">
-                            <img src="{% static 'images/icons8-google-50.png' %}" alt="Google icon" width="25px"
-                                class="mr-2">
-                            Google Login
-                        </button>
+                        <div class="fb-login-button mt-3" data-size="large" data-button-type="continue_with"
+                            data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"
+                            data-width="" onLogin="checkLoginState()"></div>
 
+                        <!-- google login button -->
+                        <div class="g-signin2 mt-3" id="googleauth">
+                        </div>
                         </ul>
                     </div>
                 </div>
