@@ -41,6 +41,9 @@ def login_request(request):
                 login(request, user)
                 messages.success(request, f"Logged in as {username}")
                 return redirect('main:home')
+        else:
+            messages.error(request, form.errors)
+            return redirect('main:home')
     context = {
         'form': form
     }
@@ -65,8 +68,8 @@ def register(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
                 'token': account_activation_token.make_token(user)
             })
-            # user.email_user(subject, message)
-            send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=True)
+            user.email_user(subject, message)
+            # send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=True)
 
             messages.success(request, 'Please Confirm your email to complete registration.')
 
