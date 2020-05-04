@@ -1,3 +1,7 @@
 from django.contrib import admin
+# from .models import EmailAuthentication
 
-# Register your models here.
+
+# @admin.register(EmailAuthentication)
+# class EmailAdmin(admin.ModelAdmin):
+#     list_display = ['user', 'email_confirmed']

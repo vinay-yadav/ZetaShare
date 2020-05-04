@@ -1,69 +1,4 @@
-// // facebook user auth
-// window.fbAsyncInit = function () {
-//     // FB JavaScript SDK configuration and setup
-//     FB.init({
-//         appId: '243240056787926', // FB App ID
-//         cookie: true,  // enable cookies to allow the server to access the session
-//         xfbml: false,  // parse social plugins on this page
-//         version: 'v6.0' // use graph api version 2.8
-//     });
-
-//     // Check whether the user already logged in
-//     FB.getLoginStatus(function (response) {
-//         if (response.status === 'connected') {
-//             //display user data
-//             console.log(response.authResponse.accessToken)
-//             getFbUserData();
-//         }
-//     });
-// };
-
-// // Load the JavaScript SDK asynchronously
-// (function (d, s, id) {
-//     var js, fjs = d.getElementsByTagName(s)[0];
-//     if (d.getElementById(id)) return;
-//     js = d.createElement(s); js.id = id;
-//     js.src = "//connect.facebook.net/en_US/sdk.js";
-//     fjs.parentNode.insertBefore(js, fjs);
-// }(document, 'script', 'facebook-jssdk'));
-
-// // Facebook login with JavaScript SDK
-// function facebookauth() {
-//     FB.login(function (response) {
-//         if (response.authResponse) {
-//             // Get and display the user profile data
-//             const accessToken = response.authResponse.accessToken
-//             console.log(accessToken)
-//             getFbUserData();
-//         } else {
-//             console.log('user not log')
-//         }
-//     }, { scope: 'gender,email' });
-// }
-
-// // Fetch the user profile data from facebook
-// function getFbUserData() {
-//     FB.api('/me', { locale: 'en_US', fields: 'id,first_name,last_name,email,link,gender' },
-//         function (response) {
-//             console.log(response)
-//         });
-// }
-
-// function fbLogout() {
-//     FB.logout(function (response) {
-
-//     });
-// }
-
-// // google api
-
-// function onSignIn(googleUser) {
-//     var profile = googleUser.getBasicProfile();
-//     console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-//     console.log('Name: ' + profile.getName());
-//     console.log('Image URL: ' + profile.getImageUrl());
-//     console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-// }
+// Facebook Login
 function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
     console.log('statusChangeCallback');
     console.log(response);                   // The current login status of the person.
@@ -91,7 +26,8 @@ function checkLoginState() {               // Called when a person is finished w
 
 window.fbAsyncInit = function () {
     FB.init({
-        appId: '243240056787926',
+        //appId: '243240056787926',
+        appId: '735133187228573',
         cookie: true,                     // Enable cookies to allow the server to access the session.
         xfbml: true,                     // Parse social plugins on this webpage.
         version: 'v6.0'           // Use this Graph API version for this call.
@@ -142,7 +78,7 @@ function gLogout() {
     });
 }
 
-// google auth
+// Google Login
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
     document.getElementById('username').innerHTML = profile.getName()
