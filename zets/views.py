@@ -4,6 +4,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
@@ -29,29 +30,27 @@ def logout_request(request):
 
 
 def login_request(request):
-    form = LoginForm
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
         if form.is_valid():
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password']
+            username = request.POST.get('username')
+            password = request.POST.get('password')
 
             user = authenticate(username=username, password=password)
             if user:
                 login(request, user)
-                messages.success(request, f"Logged in as {username}")
-                return redirect('main:home')
+                return JsonResponse({'msg': f"Logged in as {username}"})
+
         else:
-            messages.error(request, form.errors)
-            return redirect('main:home')
-    context = {
-        'form': form
-    }
-    return render(request, 'temp.html', context)
+            response = JsonResponse({'error': form.errors})
+            response.status_code = 401
+            return response
+
+    else:
+        return redirect("main:home")
 
 
 def register(request):
-    register_form = SignUpForm
     if request.method == 'POST':
         register_form = SignUpForm(request.POST or None)
         if register_form.is_valid():
@@ -71,15 +70,14 @@ def register(request):
             user.email_user(subject, message)
             # send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=True)
 
-            messages.success(request, 'Please Confirm your email to complete registration.')
-
-            return redirect('main:home')
+            return JsonResponse({'msg': 'User Created, please confirm your email to complete registration.'})
         else:
-            print(register_form.errors)
-    context = {
-        'form': register_form
-    }
-    return render(request, 'temp.html', context)
+            response = JsonResponse({'error': register_form.errors})
+            response.status_code = 409
+            return response
+
+    else:
+        return redirect('main:home')
 
 
 def activate_account(request, uidb64, token, *args, **kwargs):
@@ -96,7 +94,16 @@ def activate_account(request, uidb64, token, *args, **kwargs):
         user.save()
         login(request, user)
         messages.success(request, 'Account Successfully Activated')
-        return redirect('main:home')
+        # return redirect('main:home')
     else:
         messages.error(request, 'The confirmation link was invalid, possibly because it has already been used.')
-        return redirect('main:home')
+
+    return redirect('main:home')
+
+
+def social_register(request):
+    pass
+
+
+def social_login(request):
+    pass
