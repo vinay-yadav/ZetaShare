@@ -102,7 +102,7 @@
 
                         <div class="auth-data">
 
-                            <form id="auth-data" method="post" action={% url 'main:login' %}>
+                            <form id="auth-data" method="post" data-url={% url 'main:login' %}>
                                 {% csrf_token %}
                                 {{ login.username }}
                                 {{ login.password }}
@@ -114,7 +114,7 @@
 
                         <div class="signup-user">
 
-                            <form id="signup-user" method="post" action={% url 'main:register' %}>
+                            <form id="signup-user" method="post" data-url={% url 'main:register' %}>
                                 {% csrf_token %}
                                 {{ signup.first_name }}
                                 {{ signup.last_name }}

@@ -1,5 +1,84 @@
-// nav active class
+// Login Ajax
+$(document).ready(function(){
+    let $myForm = $("#auth-data")
+    $myForm.submit(function(e){
+        e.preventDefault();
+        let $formData = $(this).serialize()
+        let $endpoint = $myForm.attr("data-url")
 
+        $.ajax({
+            method: "POST",
+            url: $endpoint,
+            data: $formData,
+            success: handleSuccess,
+            error: handleError
+        })
+
+        function handleSuccess(data){
+            alert(data['msg']);
+            window.location.reload();
+        }
+
+        function handleError(data){
+            let response = data.responseJSON.error.__all__[0]
+            if (response === 'User does not exist') {
+                $('#id_username').focus().css('background-color', 'red')
+            } else if (response === 'Incorrect Password') {
+                $('#id_password').focus().css('background-color', 'red')
+            }
+            else {
+                alert(response)
+            }
+        }
+    })
+})
+
+
+// User Registration Ajax
+$(document).ready(function(){
+    let $signupForm = $("#signup-user")
+    $signupForm.submit(function(f){
+        f.preventDefault();
+        let $formData = $(this).serialize()
+        let $endpoint = $signupForm.attr("data-url")
+
+        $.ajax({
+            method: "POST",
+            url: $endpoint,
+            data: $formData,
+            success: handleSuccess,
+            error: handleError
+        })
+
+        function handleSuccess(data){
+            alert(data['msg']);
+            window.location.reload();
+        }
+
+        function handleError(data){
+            let response = data.responseJSON.error
+            let key = Object.keys(response)[0]
+
+            if (key === 'username'){
+                $('#signup-user #id_username').focus().css('background-color', 'red')
+                alert(response[key][0])
+            }
+
+            if (key === 'email'){
+                alert(response[key][0])
+                $('#id_email').focus().css('background-color', 'red')
+            }
+
+            if (key === 'password2'){
+                alert(response[key][0])
+            }
+        }
+    })
+})
+
+
+
+// nav active class
 $(function () {
     $('#app-nav li a').click(function () {
         $("#app-nav li.active").removeClass('active')
@@ -13,7 +92,6 @@ $(function () {
 })
 
 function slidertoggle() {
-
     $('.login-sidebar').toggle('slow')
 }
 
@@ -58,7 +136,7 @@ function Signupvalidation() {
         $('#id_email').css('border-color', 'red')
         return false
     }
-    if ($('#id_password1').val() != $('#id_password2').val()) {
+    if ($('#id_password1').val() !== $('#id_password2').val()) {
         $('#id_password2').css('border-color', 'red')
         $('#password2err').css('display', 'block')
         return false
