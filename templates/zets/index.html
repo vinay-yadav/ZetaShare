@@ -1,93 +1,169 @@
 <!DOCTYPE html>
 <html lang="en">
 
+
+{% load static %}
+
 <head>
     <meta charset="UTF-8">
-    <title>Hello</title>
-
-    <!-- boostrap css -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-signin-client_id"
+        content="322840290434-h5oqtcm5gq8vr8l5b6gt6cfdeim7srp5.apps.googleusercontent.com">
+    <title>Zeta Share</title>
+    <!-- css -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- icons -->
+    <link rel="stylesheet" href="{% static 'css/boxicons.min.css' %}">
+    <!-- social authentication -->
+    <script src="{% static 'js/socialauth.js' %}"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 </head>
 
 <body>
-    <!-- facebook login -->
 
-    <script>
-        window.fbAsyncInit = function () {
-            FB.init({
-                appId: '243240056787926',
-                cookie: true,
-                xfbml: true,
-                version: 'v2.0'
-            });
+    <div class="wrapper">
+        <header>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="#">Zeta Share</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
 
-            FB.getLoginStatus(function (response) {
-                statusChangeCallback(response);
-            });
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav m-auto" id="app-nav">
+                        <li class="nav-item active mx-3">
+                            <a class="nav-link" href="#">Home</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="#">About us</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="#">Plans</a>
+                        </li>
+                        <li class="nav-item mx-3">
+                            <a class="nav-link" href="#">Explore</a>
+                        </li>
+                    </ul>
+                    <div class="auth-button" onclick="slidertoggle()">
+                        <div class="default-data">
+                            <img src="{% static 'images/profile.png' %}" alt="profilepic" id="profile-img" width="50px"
+                                height="50px" style="border: 3px solid #e0e0e0;border-radius: 50%;">
+                            <span class="text-muted" style="font: size 0.8rem;font: weight 600;">Login/Signup</span>
+                        </div>
+                    </div>
 
-        };
+                    <!-- user signed -->
+                    <div class="btn-group" id="user-info" style="display:none">
+                        <button type="button" class="dropdown" data-toggle="dropdown" aria-haspopup="true"
+                            aria-expanded="true" style="border: 0;background: #f8f9fa;outline:none">
+                            <img src="{% static 'images/profile.png' %}" alt="profilepic" id="profile-img" width="50px"
+                                height="50px" style="border: 3px solid #e0e0e0;border-radius: 50%;">
+                            <span class="username" id="username">Vinay</span>
+                            <i class="bx bx-chevron-down" style="color:#151111"></i>
 
-        (function (d, s, id) {
-            var js, fjs = d.getElementsByTagName(s)[0];
-            if (d.getElementById(id)) { return; }
-            js = d.createElement(s); js.id = id;
-            js.src = "https://connect.facebook.net/en_US/sdk.js";
-            fjs.parentNode.insertBefore(js, fjs);
-        }(document, 'script', 'facebook-jssdk'));
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
+                            style="position: absolute;will-change: transform;top: 0px;left: 0px;transform: translate3d(-22px, 56px, 0px);">
 
-        function statusChangeCallback(response) {
-            if (response.status == 'connected') {
-                console.log('user is already loggedin')
-                FB.api(
-                    '/me',
-                    'GET',
-                    { "fields": "id,name,birthday,gender,email,location" },
-                    function (response) {
-                        console.log(response)
-                    }
-                );
-            }
-            else {
-                console.log('plzz login first')
-            }
-        }
+                            <a class="dropdown-item" href="#">
+                                <i class="bx bx-user bx-flip-horizontal"></i>
+                                <span>Profile</span>
+                            </a>
+                            <a class="dropdown-item" href="#">
+                                <i class="bx bx-wrench bx-tada bx-flip-horizontal"></i>
+                                <span>Setting</span>
+                            </a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item glog">
+                                <i class="bx bx-power-off bx-flip-horizontal"></i>
+                                <span>Logout</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
 
+        <div class="section-0">
+            <div class="login-sidebar h-100">
+                <div class="sidebar-position p-4">
+                    <div id="sider-data">
 
+                        <div class="auth-data">
+                            <form id="auth-data" onsubmit="return loginSubmit()">
+                                <input type="text" id="loginemail" placeholder="Email" name="userEmail">
+                                <p class="emailerror"></p>
+                                <input type="password" id="loginpass" placeholder="password" name="userPassword">
+                                <button class="authbar-button btn -btn-primary w-100"
+                                    style="color:white;background:#cd2828">Login</button>
+                                <a href="#" id='signup'>click for sign up</a>
+                            </form>
+                        </div>
 
+                        <div class="signup-user">
+                            <form id="signup-user" onsubmit="return Signupvalidation()">
 
-        function checkLoginState() {
-            FB.getLoginStatus(function (response) {
-                statusChangeCallback(response);
-            });
-        }
-    </script>
+                                {{form.first_name}}
+                                {{form.last_name}}
+                                {{form.username}}
+                                {{form.email}}
+                                {{form.password1}}
+                                {{form.password2}}
+                                <p id="password2err"
+                                    style=" display: none; color: red; position: absolute;font-size: 10px;top: 294px;font-weight: 600;">
+                                    password not match
+                                </p>
+                                <button class="authbar-button btn -btn-primary w-100"
+                                    style="color:white;background:#cd2828">Sign Up</button>
+                                <label class="log"> click here for <a id="login" class="pl-1" style="color: black;">
+                                        login</a></label>
+                            </form>
+                        </div>
 
+                        <div class="fb-login-button mt-3" data-size="large" data-button-type="continue_with"
+                            data-layout="default" data-auto-logout-link="false" data-use-continue-as="false"
+                            data-width="" onLogin="checkLoginState()"></div>
 
+                        <!-- google login button -->
+                        <div class="g-signin2 mt-3" id="googleauth">
+                        </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <h1 style="text-align: center">Hello, World!</h1>
+        <!-- section 1 backgroung image -->
 
+        <div class="section-1">
+            <div class="bg-image-container">
+                <div class="container-fluid row">
+                    <div class="container-content col-sm-6" style="padding: 6rem !important;">
+                        <div class="caption">
+                            <h1 class="text-color">WELCOME </h1>
+                            <h3 class="text-color">TO</h3>
+                            <h1 class="text-color"> ZETA SHARE</h1>
+                        </div>
 
-    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="caption-btn" style="margin-top: 200px;">
+                            <div class="btn btn-outline-warning mr-3" style="width: 150px;">SEE PLANS</div>
+                            <div class="btn btn-info" style="width: 150px;">GET STARTED</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <div class="status">
-
-    </div>
-
-    <!-- bootstrap js cdn -->
-    <!-- <script src="https://code.jquery.com/jquery-3.5.0.js"
-        integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script> -->
-
-
-
+        <!-- bootstrap and jquery -->
+        <script src="{% static 'js/jquery-3.4.0.min.js' %}"></script>
+        <script src="{% static 'js/bootstrap.js' %}"></script>
+        <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+        <script src="{% static 'js/myapp.js' %}"></script>
 </body>
 
 </html>

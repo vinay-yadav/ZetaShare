@@ -1,0 +1,83 @@
+.active a{
+    color: #e2d646;
+    font-weight: 600;
+}
+.bg-image-container{
+    background-image: url('../images/bgimage.jpg');
+    background-position:center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    height:600px;
+}
+
+/* sidebar */
+
+.login-sidebar{
+    position: fixed;
+    right: 0;
+    width: 300px;
+    background: white;
+    z-index: 100;
+    display: none;
+    
+}
+
+.login-sidebar input{
+    margin: 14px 0;
+    width: 100%;
+    height: 40px;
+    font-size: 15px;
+    padding: 0 0 0 10px;
+    border: 1px solid #e2d646;
+}
+
+#signup,#login,.log{
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+    float: right;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.authbar-button{
+    border-radius: 0;
+    box-shadow: none;
+    color: white;
+}
+
+.emailerror{
+    display:none;
+}
+
+
+/* signup form */
+.signup-user{
+display: none;
+}
+#id_first_name{
+margin-right: 2%;
+width: 48%;
+}
+#id_last_name{
+    width: 48%;
+}
+
+/* paralax body */
+.text-color{
+    color: #FF9800;
+    font-size: 4rem;
+}
+
+.caption{
+    padding: 0;
+}
+
+.glog{
+    color:red
+}
+
+.glog:active{
+    color:white;
+}
