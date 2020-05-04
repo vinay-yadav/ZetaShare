@@ -47,39 +47,41 @@
                     </ul>
                     <div class="auth-button" onclick="slidertoggle()">
                         <div class="default-data">
+
                             <span class="text-muted" style="font: size 0.8rem;font: weight 600;">Login/Signup</span>
+
+                        </div>
+
+                        <!-- on user signed to website -->
+                        <div class="btn-group" id="user-info" style="display:none">
+                            <button type="button" class="dropdown" data-toggle="dropdown" aria-haspopup="true"
+                                aria-expanded="false"
+                                style="border: 0;background: #f8f9fa;outline:none;cursor: pointer;">
+                                <img src="{% static 'images/profile.png' %}" alt="profilepic" id="user_profile_img"
+                                    width="50px" height="50px" style="border: 3px solid #e0e0e0;border-radius: 50%;">
+                                <span class="username" id="logged_user_name"></span>
+                                <i class="bx bx-chevron-down" style="color:#151111"></i>
+                            </button>
+
+                            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
+                                style="position: absolute;will-change: transform; top: 0; left: 0; transform: translate3d(-22px, 56px, 0px);">
+
+                                <a class="dropdown-item" href="#">
+                                    <i class="bx bx-user bx-flip-horizontal"></i>
+                                    <span>Profile</span>
+                                </a>
+                                <a class="dropdown-item" href="#">
+                                    <i class="bx bx-wrench bx-tada bx-flip-horizontal"></i>
+                                    <span>Setting</span>
+                                </a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item glog">
+                                    <i class="bx bx-power-off bx-flip-horizontal"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
-
-                    <!-- on user signed to website -->
-                    <div class="btn-group" id="user-info" style="display:none">
-                        <button type="button" class="dropdown" data-toggle="dropdown" aria-haspopup="true"
-                            aria-expanded="false" style="border: 0;background: #f8f9fa;outline:none;cursor: pointer;">
-                            <img src="{% static 'images/profile.png' %}" alt="profilepic" id="user_profile_img"
-                                width="50px" height="50px" style="border: 3px solid #e0e0e0;border-radius: 50%;">
-                            <span class="username" id="logged_user_name"></span>
-                            <i class="bx bx-chevron-down" style="color:#151111"></i>
-
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
-                            style="position: absolute;will-change: transform;top: 0px;left: 0px;transform: translate3d(-22px, 56px, 0px);">
-
-                            <a class="dropdown-item" href="#">
-                                <i class="bx bx-user bx-flip-horizontal"></i>
-                                <span>Profile</span>
-                            </a>
-                            <a class="dropdown-item" href="#">
-                                <i class="bx bx-wrench bx-tada bx-flip-horizontal"></i>
-                                <span>Setting</span>
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item glog">
-                                <i class="bx bx-power-off bx-flip-horizontal"></i>
-                                <span>Logout</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
             </nav>
         </header>
 
@@ -104,8 +106,6 @@
                                 {% csrf_token %}
                                 {{ login.username }}
                                 {{ login.password }}
-
-
                                 <button class="authbar-button btn -btn-primary w-100"
                                     style="color:white;background:#cd2828">Login</button>
                                 <a href="#" id='signup'>click for sign up</a>
@@ -130,9 +130,6 @@
                                 <button class="authbar-button btn -btn-primary w-100"
                                     style="color:white;background:#cd2828">Sign Up</button>
 
-
-
-
                                 <label class="log"> click here for <a id="login" class="pl-1" style="color: black;">
                                         login</a></label>
                             </form>
@@ -146,10 +143,7 @@
                             data-width="" onLogin="checkLoginState()"></div>
 
                         <!-- google login button -->
-                        <div class="g-signin2 mt-3" id="googleauth">
-                        </div>
-                        </ul>
-
+                        <div class="g-signin2 mt-3" id="googleauth"></div>
                     </div>
                 </div>
             </div>

@@ -1,3 +1,4 @@
+
 // facebook login
 function statusChangeCallback(response) {
 
@@ -25,7 +26,8 @@ function checkLoginState() {               // Called when a person is finished w
 
 window.fbAsyncInit = function () {
     FB.init({
-        appId: '243240056787926',
+        //appId: '243240056787926',
+        appId: '735133187228573',
         cookie: true,                     // Enable cookies to allow the server to access the session.
         xfbml: true,                     // Parse social plugins on this webpage.
         version: 'v6.0'           // Use this Graph API version for this call.
@@ -80,7 +82,7 @@ function fbLogout() {
 }
 
 
-// google auth
+// Google Login
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
     document.getElementById('logged_user_name').innerHTML = profile.getName()
