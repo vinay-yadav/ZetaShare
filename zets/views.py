@@ -22,6 +22,11 @@ def home(request):
     }
     return render(request, 'zets/index.html', context)
 
+# dashboard route
+
+def dashboard(req):
+    return render(req,'zets/dashboard.html')
+
 
 def logout_request(request):
     logout(request)

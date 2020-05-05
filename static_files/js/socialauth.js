@@ -1,8 +1,8 @@
-// Facebook Login
-function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
-    console.log('statusChangeCallback');
-    console.log(response);                   // The current login status of the person.
-    if (response.status === 'connected') {   // Logged into your webpage and Facebook.
+
+// facebook login
+function statusChangeCallback(response) {
+
+    if (response.status === 'connected') {
         fetchdata();
         $('.auth-button').css('display', 'none')
         $('#user-info').css('display', 'block')
@@ -52,8 +52,22 @@ window.fbAsyncInit = function () {
 function fetchdata() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
     console.log('Welcome!  Fetching your information.... ');
     FB.api('/me', function (response) {
+        console.log(response)
+        document.getElementById('logged_user_name').innerHTML = response.name
+        const userdata = {
+            userId: response.userId,
+            username: response.name,
+            accessToken: accessToken
 
-        document.getElementById('username').innerHTML = response.name
+        }
+        $.ajax({
+            type: 'post',
+            url: "",
+            data: userdata,
+            success: function () {
+                alert('Successfully Signed By facebook')
+            }
+        })
 
     });
 }
@@ -67,30 +81,34 @@ function fbLogout() {
     })
 }
 
-function gLogout() {
-    var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
-        console.log('User signed out.');
-        console.log('logout successfully')
-        $('#user-info').css('display', 'none')
-        $('.auth-button').css('display', 'block')
-        location.reload()
-    });
-}
 
 // Google Login
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
-    document.getElementById('username').innerHTML = profile.getName()
-    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-    console.log('Name: ' + profile.getName());
-    console.log('Image URL: ' + profile.getImageUrl());
-    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-    console.log(googleUser)
+    document.getElementById('logged_user_name').innerHTML = profile.getName()
+    document.getElementById('user_profile_img').setAttribute('src', profile.getImageUrl())
     $('#user-info').css('display', 'block')
     $('.auth-button').css('display', 'none')
     $('.glog').attr('onclick', 'gLogout()')
     $('.login-sidebar').hide()
+
+    // ajax to submit data to database
+    const userdata = {
+        userId: profile.getId(),
+        userName: profile.getName(),
+        userEmail: profile.getEmail(),
+        userImg: profile.getImageUrl(),
+        accessToken: googleUser.getAuthResponse().access_token
+    }
+
+    $.ajax({
+        type: 'post',
+        url: '',
+        data: userdata,
+        success: function (response) {
+            alert('User logged in Successfully')
+        }
+    })
 }
 
 function onFailure() {
@@ -110,6 +128,18 @@ function renderButton() {
 
     });
 }
+function gLogout() {
+    var auth2 = gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function () {
+        console.log('User signed out.');
+        console.log('logout successfully')
+        $('#user-info').css('display', 'none')
+        $('.auth-button').css('display', 'block')
+        location.reload()
+    });
+}
+
+
 
 
 
