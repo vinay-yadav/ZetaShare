@@ -1,10 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Profile</title>
-</head>
-<body>
+{% extends 'zets/home.html' %}
+{%  load static %}
+{% block title %}Profile | ZetaShare{% endblock %}
+
+{% block content %}
     <form method="post">
         {% csrf_token %}
         <label for=""></label>
@@ -12,5 +10,4 @@
         <a href="{% url 'password_change' %}">Change Password</a>
         <button type="submit">Save</button>
     </form>
-</body>
-</html>
+{% endblock %}
