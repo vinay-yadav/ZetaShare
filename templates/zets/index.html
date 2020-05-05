@@ -24,6 +24,9 @@
         <header>
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <a class="navbar-brand" href={% url 'main:home' %}>Zeta Share</a>
+                {% if user.is_authenticated %}
+                    {{user}}<a href="{% url 'main:logout' %}">logout</a>
+                {% endif %}
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                     aria-label="Toggle navigation">
@@ -106,8 +109,8 @@
                                 {% csrf_token %}
                                 {{ login.username }}
                                 {{ login.password }}
-                                <button class="authbar-button btn -btn-primary w-100"
-                                    style="color:white;background:#cd2828">Login</button>
+                                <button class="authbar-button btn -btn-primary w-100" style="color:white;background:#cd2828">Login</button>
+                                <a href="{% url 'password_reset' %}">Forgot password</a>
                                 <a href="#" id='signup'>click for sign up</a>
                             </form>
                         </div>
