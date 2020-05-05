@@ -58,8 +58,7 @@
                         <!-- on user signed to website -->
                         <div class="btn-group" id="user-info" style="display:none">
                             <button type="button" class="dropdown" data-toggle="dropdown" aria-haspopup="true"
-                                aria-expanded="false"
-                                style="border: 0;background: #f8f9fa;outline:none;cursor: pointer;">
+                                aria-expanded="false" style="border: 0;background: #f8f9fa;outline:none;cursor: pointer;">
                                 <img src="{% static 'images/profile.png' %}" alt="profilepic" id="user_profile_img"
                                     width="50px" height="50px" style="border: 3px solid #e0e0e0;border-radius: 50%;">
                                 <span class="username" id="logged_user_name"></span>
@@ -92,7 +91,7 @@
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}">
+            <div class="alert alert-{{ message.tags }}" style="width: 98%">
                 {{ message }}
             </div>
             {% endfor %}
@@ -107,8 +106,12 @@
                         <div class="auth-data">
 
                             <form id="auth-data" method="post" data-url={% url 'main:login' %} onsubmit="loginSubmit()">
-
                                 {% csrf_token %}
+                                <div class="error">
+                                    <p id="userErrLog" style=" display: none; color: red; position: absolute;font-size: 10px;top: 23px;font-weight: 600;"></p>
+                                    <p id="passwordErrLog" style=" display: none; color: red; position: absolute;font-size: 10px;top: 90px;font-weight: 600;"></p>
+                                    <p id="emailErrLog" style=" display: none; color: red; position: absolute;font-size: 10px;top: 146px;font-weight: 600;"></p>
+                                </div>
                                 {{ login.username }}
                                 {{ login.password }}
                                 <button class="authbar-button btn -btn-primary w-100" style="color:white;background:#cd2828">Login</button>
@@ -119,20 +122,20 @@
 
                         <div class="signup-user">
 
-                            <form id="signup-user" method="post" data-url={% url 'main:register' %}
-                                onsubmit="return Signupvalidation()">
-
+                            <form id="signup-user" method="post" data-url='{% url 'main:register' %}'>
                                 {% csrf_token %}
+                                <div class="error">
+                                    <p id="userErr" style=" display: none; color: red; position: absolute;font-size: 10px;top: 90px;font-weight: 600;"></p>
+                                    <p id="emailErr" style=" display: none; color: red; position: absolute;font-size: 10px;top: 158px;font-weight: 600;"></p>
+                                    <p id="password2err" style=" display: none; color: red; position: absolute;font-size: 10px;top: 294px;font-weight: 600;"></p>
+                                </div>
                                 {{ signup.first_name }}
                                 {{ signup.last_name }}
                                 {{ signup.username }}
                                 {{ signup.email }}
                                 {{ signup.password1 }}
                                 {{ signup.password2 }}
-                                <p id="password2err"
-                                    style=" display: none; color: red; position: absolute;font-size: 10px;top: 294px;font-weight: 600;">
-                                    password not match
-                                </p>
+
                                 <button class="authbar-button btn -btn-primary w-100"
                                     style="color:white;background:#cd2828">Sign Up</button>
 

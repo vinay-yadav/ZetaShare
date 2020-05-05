@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.http import JsonResponse
@@ -14,6 +15,8 @@ from .tokens import account_activation_token
 
 
 def home(request):
+    if request.user.is_authenticated:
+        return redirect('main:dashboard')
     register_form = SignUpForm
     login_form = LoginForm
     context = {
@@ -22,16 +25,26 @@ def home(request):
     }
     return render(request, 'zets/index.html', context)
 
-# dashboard route
 
-def dashboard(req):
-    return render(req,'zets/dashboard.html')
+@login_required(login_url='main:home')
+def dashboard(request):
+    return render(request, 'zets/dashboard.html')
 
 
 def logout_request(request):
     logout(request)
     messages.info(request, 'Logged Out Successfully')
     return redirect('main:home')
+
+
+def user_profile(request, userid):
+    instance = User.objects.get(pk=userid)
+    form = SignUpForm(request.POST or None, instance=instance)
+    if form.is_valid():
+        form.save()
+        login(request, instance)
+        return redirect('main:dashboard')
+    return render(request, 'zets/profile.html', {'form': form})
 
 
 def login_request(request):
@@ -44,7 +57,7 @@ def login_request(request):
             user = authenticate(username=username, password=password)
             if user:
                 login(request, user)
-                return JsonResponse({'msg': f"Logged in as {username}"})
+                return JsonResponse({'msg': f"Logged in as {username}", 'url': '/dashboard/'})
 
         else:
             response = JsonResponse({'error': form.errors})

@@ -15,19 +15,21 @@ $(document).ready(function(){
         })
 
         function handleSuccess(data){
-            alert(data['msg']);
-            window.location.reload();
+            window.location.replace(data.url)
         }
 
         function handleError(data){
             let response = data.responseJSON.error.__all__[0]
             if (response === 'User does not exist') {
-                $('#id_username').focus().css('background-color', 'red')
+                $('#userErrLog').css('display', 'block').text(data.responseJSON.error.__all__[0])
             } else if (response === 'Incorrect Password') {
-                $('#id_password').focus().css('background-color', 'red')
+                $('#userErrLog').css('display', 'None')
+                $('#passwordErrLog').css('display', 'block').text(data.responseJSON.error.__all__[0])
             }
             else {
-                alert(response)
+                $('#userErrLog').css('display', 'None')
+                $('#passwordErrLog').css('display', 'None')
+                $('#emailErrLog').css('display', 'block').text(data.responseJSON.error.__all__[0])
             }
         }
     })
@@ -46,6 +48,7 @@ $(document).ready(function(){
             method: "POST",
             url: $endpoint,
             data: $formData,
+            async: false,
             success: handleSuccess,
             error: handleError
         })
@@ -60,17 +63,18 @@ $(document).ready(function(){
             let key = Object.keys(response)[0]
 
             if (key === 'username'){
-                $('#signup-user #id_username').focus().css('background-color', 'red')
-                alert(response[key][0])
+                $('#userErr').css('display', 'block').text(response[key][0])
             }
 
             if (key === 'email'){
-                alert(response[key][0])
-                $('#id_email').focus().css('background-color', 'red')
+                $('#userErr').css('display', 'None')
+                $('#emailErr').css('display', 'block').text(response[key][0])
             }
 
             if (key === 'password2'){
-                alert(response[key][0])
+                $('#userErr').css('display', 'None')
+                $('#emailErr').css('display', 'None')
+                $('#password2err').css('display', 'block').text(response[key][0])
             }
         }
     })
@@ -130,13 +134,13 @@ function loginSubmit() {
 
 }
 
-function Signupvalidation() {
+function SignUpValidation() {
     const regex = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g
     if (regex.test($('#id_email').val()) == false) {
         $('#id_email').css('border-color', 'red')
         return false
     }
-    if ($('#id_password1').val() !== $('#id_password2').val()) {
+    if ($('#id_password1').val() != $('#id_password2').val()) {
         $('#id_password2').css('border-color', 'red')
         $('#password2err').css('display', 'block')
         return false
