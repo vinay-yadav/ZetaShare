@@ -81,17 +81,6 @@ $(document).ready(function(){
 })
 
 
-// Mailer Function
-function passwordMailer(data) {
-    $.ajax({
-        url: data.getAttribute('data-url'),
-        success: function (res) {
-            alert(res.msg);
-        }
-    })
-}
-
-
 // nav active class
 $(function () {
     $('#app-nav li a').click(function () {
@@ -110,7 +99,6 @@ function slidertoggle() {
 }
 
 // switch forms
-
 $('#login').click(function () {
     $('.signup-user').hide()
     $('.auth-data').show()
