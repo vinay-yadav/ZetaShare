@@ -1,8 +1,9 @@
 # Project exclude paths
 /venv/
 /zets/migrations/
+/frontliner/migrations
 db.sqlite3
 __pycache__
 .idea
 .env
-.pyc
+*.pyc

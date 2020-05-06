@@ -24,7 +24,7 @@
                     </div>
                     <ul class="data">
                         <li class="mx-2 mb-4">
-                            <a href="{% url 'main:dashboard' %}" class="active">
+                            <a href="{% url 'zets:dashboard' %}" class="active">
                                 <i class='bx bxl-squarespace' style="font-size: 30px;"></i>
                                 <span class="text-muted ml-3">Dashboard</span>
                             </a>
@@ -77,7 +77,7 @@
                         <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end"
                             style="position: absolute;will-change: transform; top: 0; left: 0; transform: translate3d(-22px, 56px, 0px);">
 
-                            <a class="dropdown-item" href="{% url 'main:profile' user.pk %}">
+                            <a class="dropdown-item" href="{% url 'zets:profile' %}">
                                 <i class="bx bx-user bx-flip-horizontal"></i>
                                 <span>Profile</span>
                             </a>
@@ -94,17 +94,28 @@
                     </div>
                 </nav>
             </header>
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" style="margin-left: 46px; margin-right: 20px;">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <main style="margin-left: 550px;">
+                {% block content %}
+                {% endblock %}
+            </main>
         </div>
     </div>
 
-    <main style="margin-left: 500px">
-        {% block content %}
-        {% endblock %}
-    </main>
     <!-- bootstrap and jquery -->
     <script src="{% static 'js/jquery-3.4.0.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/zets.js' %}"></script>
 </body>
 
 </html>

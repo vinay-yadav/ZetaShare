@@ -81,7 +81,6 @@ $(document).ready(function(){
 })
 
 
-
 // nav active class
 $(function () {
     $('#app-nav li a').click(function () {
@@ -100,7 +99,6 @@ function slidertoggle() {
 }
 
 // switch forms
-
 $('#login').click(function () {
     $('.signup-user').hide()
     $('.auth-data').show()
