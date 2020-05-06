@@ -10,11 +10,3 @@ class AccountActivationTokenGenerator(PasswordResetTokenGenerator):
 
 
 account_activation_token = AccountActivationTokenGenerator()
-
-
-# subject = 'Welcome to the family'
-# message = "We very much appreciated you business.\nWe will be in touch soon."
-# from_email = settings.EMAIL_HOST_USER
-# to_list = [obj.email, from_email]
-# send_mail(subject, message, from_email, to_list, fail_silently=True)
-# register_form = SignUpForm

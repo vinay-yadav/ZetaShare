@@ -5,9 +5,16 @@
 {% block content %}
     <form method="post">
         {% csrf_token %}
-        <label for=""></label>
-        {{ form.as_p }}
-        <a href="{% url 'password_change' %}">Change Password</a>
+        <label for="id_username">Username:</label>
+        {{ form.username }}<br>
+        <label for="id_first_name">First name: </label>
+        {{ form.first_name }}<br>
+        <label for="id_last_name">Last name:</label>
+        {{ form.last_name }}<br>
+        <label for="id_email">Email</label>
+        {{ form.email }}<br>
+
+        <a href="#" data-url="{% url 'main:PasswordMail' %}" onclick="passwordMailer(this)">Change Password</a>
         <button type="submit">Save</button>
     </form>
 {% endblock %}

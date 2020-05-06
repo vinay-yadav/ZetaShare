@@ -1,16 +1,17 @@
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.forms import SetPasswordForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from .forms import SignUpForm, LoginForm
+from .forms import SignUpForm, LoginForm, EditProfileForm
 from .tokens import account_activation_token
 
 
@@ -37,13 +38,16 @@ def logout_request(request):
     return redirect('main:home')
 
 
-def user_profile(request, userid):
-    instance = User.objects.get(pk=userid)
-    form = SignUpForm(request.POST or None, instance=instance)
+@login_required(login_url='main:home')
+def user_profile(request):
+    form = EditProfileForm(request.POST or None, instance=request.user)
     if form.is_valid():
         form.save()
-        login(request, instance)
-        return redirect('main:dashboard')
+        messages.success(request, 'Changes Saved Successfully')
+        return redirect('main:profile')
+    else:
+        print(form.errors)
+        messages.error(request, form.errors)
     return render(request, 'zets/profile.html', {'form': form})
 
 
@@ -53,7 +57,6 @@ def login_request(request):
         if form.is_valid():
             username = request.POST.get('username')
             password = request.POST.get('password')
-
             user = authenticate(username=username, password=password)
             if user:
                 login(request, user)
@@ -115,6 +118,53 @@ def activate_account(request, uidb64, token, *args, **kwargs):
         # return redirect('main:home')
     else:
         messages.error(request, 'The confirmation link was invalid, possibly because it has already been used.')
+
+    return redirect('main:home')
+
+
+@login_required(login_url='main:home')
+def change_password(request):
+    if request.method == 'POST':
+        form = SetPasswordForm(data=request.POST or None, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Password Changed Successfully')
+            login(request, request.user)
+            return redirect('main:profile')
+        else:
+            messages.error(request, 'Password miss-match')
+            form = SetPasswordForm(request.POST or None)
+            return render(request, 'zets/change-password.html', {'form': form})
+
+
+@login_required(login_url='main:home')
+def password_change_mail(request):
+    user = User.objects.get(pk=request.user.pk)
+    current_site = get_current_site(request)
+    subject = 'Password Change Request'
+    message = render_to_string('auth/account_change_password.html', {
+        'user': user,
+        'domain': current_site,
+        'uid': urlsafe_base64_encode(force_bytes(user.pk)),
+        'token': account_activation_token.make_token(user)
+    })
+    user.email_user(subject, message)
+    return JsonResponse({'msg': 'Password Change Link Sent to your registered mail'})
+
+
+@login_required(login_url='main:home')
+def password_validation(request, uidb64, token, *args, **kwargs):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        print('im inside')
+        form = SetPasswordForm(request.POST or None)
+        return render(request, 'zets/change-password.html', {'form': form})
 
     return redirect('main:home')
 

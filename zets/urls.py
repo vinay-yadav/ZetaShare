@@ -12,5 +12,8 @@ urlpatterns = [
     path('activate/<uidb64>/<token>/', activate_account, name='activate'),
     path('social-signup/', social_register, name='social_register'),
     path('social-login/', social_login, name='social_login'),
-    path('profile/<str:userid>/', user_profile, name='profile')
+    path('profile/', user_profile, name='profile'),
+    path('new-password/', change_password, name='changePassword'),
+    path('password-mail/', password_change_mail, name='PasswordMail'),
+    path('password/<uidb64>/<token>/', password_validation, name='password')
 ]

@@ -1,7 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import authenticate
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, UserChangeForm
 
 
 class LoginForm(AuthenticationForm):
@@ -37,6 +36,26 @@ class SignUpForm(UserCreationForm):
         widgets = {
             'username': forms.TextInput(attrs={'placeholder': 'Username'}),
         }
+
+    def clean_username(self):
+        user = self.cleaned_data['username']
+        qs = User.objects.filter(username=user)
+        if qs.exists():
+            raise forms.ValidationError('User Already Exists')
+        return user
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        qs = User.objects.filter(email=email)
+        if qs.exists():
+            raise forms.ValidationError('Email Already Exists')
+        return email
+
+
+class EditProfileForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name', 'email', 'username', 'password')
 
     def clean_username(self):
         instance = self.instance
