@@ -1,0 +1,41 @@
+.title{
+    padding-left: 55px;
+    margin-top: 14px;
+    font-size: 2rem;
+    font-weight: 600;
+    font-family: monospace;
+}
+
+.app-container .card{
+    box-shadow: 1px 1px 3px 2px #e8e8e8;
+}
+.app-container .img-bg{
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    margin: auto;
+    text-align: center;
+    margin-top: 28px;
+}
+
+.app-container img{
+    width: 62px;
+    padding-top: 15px;
+}
+.app-container .card-body{
+    text-align: center;
+}
+ .btn-primary:focus {
+    box-shadow:none;
+}
+
+@media(max-width:500px){
+    .title{
+        padding-left: 10px;
+        font-size: 14px;
+    }
+
+    .card{
+        margin: 0 20px;
+    }
+}
