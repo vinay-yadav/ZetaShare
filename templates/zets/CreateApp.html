@@ -1,0 +1,81 @@
+{% extends 'zets/app-index.html' %}
+{%  load static %}
+{% block title %}Home | ZetaShare{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/CreateApp.css' %}">
+
+{% endblock %}
+
+{% block content %}
+<div class="main-app">
+    <div class="create-app">
+        <h1 class="title text-muted">Choose Your Apps To Connevt</h1>
+        <div class="app-container">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-3">
+                        <div class="card my-4">
+                            <!-- facebook -->
+                            <div class="app-img">
+                                <div class="img-bg" style="background-color: #fcc3cd;">
+                                    <img src="{% static 'images/facebook.png' %}" alt="facebook">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Facebook</h5>
+                                <button class="btn btn-primary my-3" id="fbconnect" onclick="facebookLogin()"></button>
+                                <!-- <button class="btn btn-primary my-3" onclick="facebookLogout()">Logout Your App</button> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card my-4">
+                            <!-- instagram -->
+                            <div class="app-img">
+                                <div class="img-bg" style="background-color: #FFEB3B;">
+                                    <img src="{% static 'images/instagram.png' %}" alt="instagram">
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="card-title">Instagram</h5>
+                                <button class="btn btn-primary my-3">Connect Your App</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card my-4">
+                            <!-- Linkdin -->
+                            <div class="app-img">
+                                <div class="img-bg" style="background-color: #1fe0ff8c;">
+                                    <img src="{% static 'images/linkedin.png' %}" alt="linkedin">
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="card-title">Linkdin</h5>
+                                <button class="btn btn-primary my-3">Connect Your App</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card my-4">
+                            <!-- Twitter -->
+                            <div class="app-img">
+                                <div class="img-bg" style="background-color: #6bdb4f8c;">
+                                    <img src="{% static 'images/twitter.png' %}" alt="Twitter">
+                                </div>
+                            </div>
+
+                            <div class="card-body">
+                                <h5 class="card-title">Twitter</h5>
+                                <button class="btn btn-primary my-3">Connect Your App</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,12 @@
     <!-- css files -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-
+    {% block style %}
+    {% endblock %}
+    <script src="{% static 'js/connectapp.js' %}"></script>
     <!-- icons -->
     <link rel="stylesheet" href="{% static 'css/boxicons.min.css' %}">
-
+    <script src="{% static 'js/jquery-3.4.0.min.js' %}"></script>
 </head>
 
 <body>
@@ -30,7 +33,7 @@
                             </a>
                         </li>
                         <li class="mx-2 mb-4">
-                            <a href="#">
+                            <a href="{% url 'zets:connectapp' %}">
                                 <i class='bx bx-link' style="font-size: 30px;"></i>
                                 <span class="text-muted ml-3">Connect App</span>
                             </a>
@@ -70,7 +73,8 @@
                             aria-expanded="false" style="border: 0;background: #f8f9fa;outline:none;cursor: pointer;">
                             <img src="{% static 'images/profile.png' %}" alt="profilepic" id="user_profile_img"
                                 width="50px" height="50px" style="border: 3px solid #e0e0e0;border-radius: 50%;">
-                            <span class="username" id="logged_user_name">{{ user.first_name }} {{ user.last_name }}</span>
+                            <span class="username" id="logged_user_name">{{ user.first_name }}
+                                {{ user.last_name }}</span>
                             <i class="bx bx-chevron-down" style="color:#151111"></i>
                         </button>
 
@@ -95,24 +99,23 @@
                 </nav>
             </header>
             {% if messages %}
-                <ul class="messages">
-                    {% for message in messages %}
-                    <div class="alert alert-{{ message.tags }}" style="margin-left: 46px; margin-right: 20px;">
-                        {{ message }}
-                    </div>
-                    {% endfor %}
-                </ul>
+            <ul class="messages">
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" style="margin-left: 46px; margin-right: 20px;">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            </ul>
             {% endif %}
 
-            <main style="margin-left: 550px;">
-                {% block content %}
-                {% endblock %}
-            </main>
+
+            {% block content %}
+            {% endblock %}
         </div>
     </div>
 
     <!-- bootstrap and jquery -->
-    <script src="{% static 'js/jquery-3.4.0.min.js' %}"></script>
+
     <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/zets.js' %}"></script>

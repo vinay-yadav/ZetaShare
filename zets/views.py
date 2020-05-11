@@ -21,3 +21,6 @@ def user_profile(request):
         print(form.errors)
         messages.error(request, form.errors)
     return render(request, 'zets/profile.html', {'form': form})
+
+def connectapp(request):
+    return render(request, 'zets/CreateApp.html')
