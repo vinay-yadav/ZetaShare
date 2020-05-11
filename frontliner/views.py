@@ -12,7 +12,7 @@ from django.template.loader import render_to_string
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .forms import SignUpForm, LoginForm
-from .tokens import account_activation_token
+from .tokens import account_activation_token, password_change_token
 
 
 def home(request):
@@ -127,7 +127,7 @@ def password_change_mail(request):
         'user': user,
         'domain': current_site,
         'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-        'token': account_activation_token.make_token(user)
+        'token': password_change_token.make_token(user)
     })
     user.email_user(subject, message)
     return JsonResponse({'msg': 'Password Change Link Sent to your registered mail'})
@@ -142,11 +142,12 @@ def password_validation(request, uidb64, token, *args, **kwargs):
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
 
-    if user is not None and account_activation_token.check_token(user, token):
+    if user is not None and password_change_token.check_token(user, token):
         form = SetPasswordForm(request.POST or None)
         return render(request, 'zets/change-password.html', {'form': form})
-
-    return redirect('main:home')
+    else:
+        messages.error(request, 'Link already used')
+        return redirect('zets:dashboard')
 
 
 def social_register(request):
