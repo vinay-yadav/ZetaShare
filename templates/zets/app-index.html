@@ -9,6 +9,7 @@
     <!-- css files -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+
     {% block style %}
     {% endblock %}
     <script src="{% static 'js/connectapp.js' %}"></script>
@@ -33,13 +34,13 @@
                             </a>
                         </li>
                         <li class="mx-2 mb-4">
-                            <a href="{% url 'zets:connectapp' %}">
+                            <a href="{% url 'zets:connectApp' %}">
                                 <i class='bx bx-link' style="font-size: 30px;"></i>
                                 <span class="text-muted ml-3">Connect App</span>
                             </a>
                         </li>
                         <li class="mx-2 mb-4">
-                            <a href="#">
+                            <a href="{% url 'zets:card' %}">
                                 <i class='bx bxs-collection' style="font-size: 30px;"></i>
                                 <span class="text-muted ml-3">Create Post</span>
                             </a>

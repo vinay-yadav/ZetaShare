@@ -1,7 +1,7 @@
 from django.contrib import admin
-# from .models import EmailAuthentication
+from .models import SocialData
 
 
-# @admin.register(EmailAuthentication)
-# class EmailAdmin(admin.ModelAdmin):
-#     list_display = ['user', 'email_confirmed']
+@admin.register(SocialData)
+class SocialDataAdmin(admin.ModelAdmin):
+    list_display = ['facebook_id', 'page_name']

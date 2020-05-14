@@ -150,9 +150,21 @@ def password_validation(request, uidb64, token, *args, **kwargs):
         return redirect('zets:dashboard')
 
 
-def social_register(request):
-    pass
+def social_auth(request):
+    if request.method == 'POST':
+        username = request.POST.get('userId')
+        name = request.POST.get('userName').split()
+        email = request.POST.get('userEmail')
+        print(username, name, email)
 
+        try:
+            user = User.objects.get(username=username)
+            login(request, user)
+            print('login')
+        except User.DoesNotExist:
+            user = User(username=username, first_name=name[0], last_name=name[1], email=email)
+            user.save()
+            login(request, user)
+            print('signup')
 
-def social_login(request):
-    pass
+        return JsonResponse({'msg': 'completed', 'url': '/app/dashboard/'})
