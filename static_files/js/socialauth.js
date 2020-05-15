@@ -1,11 +1,26 @@
+// Get CSRF Token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        let cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
 
 // facebook login
 function statusChangeCallback(response) {
 
     if (response.status === 'connected') {
         fetchdata();
-        $('.auth-button').css('display', 'none')
-        $('#user-info').css('display', 'block')
         $('.glog').attr('onclick', 'fbLogout()')
         $('.login-sidebar').hide()
 
@@ -40,7 +55,8 @@ window.fbAsyncInit = function () {
 };
 
 
-(function (d, s, id) {                      // Load the SDK asynchronously
+// Load the SDK asynchronously
+(function (d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
     js = d.createElement(s); js.id = id;
@@ -51,21 +67,23 @@ window.fbAsyncInit = function () {
 
 function fetchdata() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
     console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', function (response) {
+    FB.api('/me', {fields: 'name, email, id'}, function (response) {
         console.log(response)
         document.getElementById('logged_user_name').innerHTML = response.name
-        const userdata = {
-            userId: response.userId,
-            username: response.name,
-            accessToken: accessToken
 
+        const user_data = {
+            userId: response.id,
+            userName: response.name,
+            userEmail: response.email
         }
+        console.log(user_data)
         $.ajax({
             type: 'post',
-            url: "",
-            data: userdata,
-            success: function () {
-                alert('Successfully Signed By facebook')
+            url: "/social-auth/",
+            data: user_data,
+            headers: { "X-CSRFToken": getCookie('csrftoken') },
+            success: function (res) {
+                window.location.replace(res.url)
             }
         })
 
@@ -87,26 +105,27 @@ function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
     document.getElementById('logged_user_name').innerHTML = profile.getName()
     document.getElementById('user_profile_img').setAttribute('src', profile.getImageUrl())
-    $('#user-info').css('display', 'block')
-    $('.auth-button').css('display', 'none')
+    // $('#user-info').css('display', 'block')
+    // $('.auth-button').css('display', 'none')
     $('.glog').attr('onclick', 'gLogout()')
     $('.login-sidebar').hide()
 
     // ajax to submit data to database
-    const userdata = {
+    const user_data = {
         userId: profile.getId(),
         userName: profile.getName(),
         userEmail: profile.getEmail(),
         userImg: profile.getImageUrl(),
-        accessToken: googleUser.getAuthResponse().access_token
+        // accessToken: googleUser.getAuthResponse().access_token
     }
 
     $.ajax({
         type: 'post',
-        url: '',
-        data: userdata,
-        success: function (response) {
-            alert('User logged in Successfully')
+        url: '/social-auth/',
+        data: user_data,
+        headers: { "X-CSRFToken": getCookie('csrftoken') },
+        success: function (res) {
+            window.location.replace(res.url)
         }
     })
 }
