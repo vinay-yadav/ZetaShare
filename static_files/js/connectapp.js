@@ -15,6 +15,41 @@ function getCookie(name) {
     return cookieValue;
 }
 
+// create app
+window.fbAsyncInit = function () {
+    FB.init({
+        appId: '243240056787926',
+        // appId: '735133187228573',
+        cookie: true,
+        xfbml: true,
+        version: 'v6.0'
+    });
+
+    FB.getLoginStatus(function (response) {
+        statusCheck(response)
+    })
+
+};
+
+(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) { return; }
+    js = d.createElement(s); js.id = id;
+    js.src = "https://connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+
+
+
+function CreateFacebookApp() {
+    FB.login(function (response) {
+        if (response.status === "connected") {
+            isuserlogged(response)
+        }
+        statusCheck(response)
+    }, { scope: 'manage_pages,publish_pages, pages_show_list' })
+}
 
 var userdata = {
     userId: '',
@@ -24,13 +59,13 @@ var userdata = {
 }
 function statusCheck(response) {
     if (response.status === 'connected') {
-        document.getElementById('fbconnect').setAttribute('onclick', 'facebookLogout()')
-        document.getElementById('fbconnect').innerHTML = 'Disconnect App'
-        isuserlogged(response)
+        document.getElementById('fbconnect').setAttribute('onclick', 'LogoutFacebookApp()')
+        document.getElementById('fbconnect').innerHTML = 'disconnect'
+
 
     }
     else {
-        document.getElementById('fbconnect').setAttribute('onclick', 'facebookLogin()')
+        document.getElementById('fbconnect').setAttribute('onclick', 'CreateFacebookApp()')
         document.getElementById('fbconnect').innerHTML = 'Connect Your App'
     }
 }
@@ -54,46 +89,9 @@ function isuserlogged(response) {
         })
     })
 }
-
-function facebookLogin() {
-    FB.login(function (response) {
-        statusCheck(response)
-    }, { scope: 'public_profile, email, manage_pages, publish_pages, pages_show_list' })
+function LogoutFacebookApp() {
+    document.getElementById('fbconnect').setAttribute('onclick', 'CreateFacebookApp()')
+    document.getElementById('fbconnect').innerHTML = 'Connect Your App'
 }
 
-function facebookLogout() {
-    userdata = {
-        userId: '',
-        name: '',
-        email: '',
-        AccessToken: ''
-    }
-    FB.api('/me/permissions/', 'delete', function (response) {
-        document.getElementById('fbconnect').setAttribute('onclick', 'facebookLogin()')
-        document.getElementById('fbconnect').innerHTML = 'Connect Your App'
-        console.log(response)
-    })
-}
 
-window.fbAsyncInit = function () {
-    FB.init({
-        // appId: '243240056787926',
-        appId: '735133187228573',
-        cookie: true,
-        xfbml: true,
-        version: 'v6.0'
-    });
-
-    FB.getLoginStatus(function (response) {
-        statusCheck(response)
-    })
-
-};
-
-(function (d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0];
-    if (d.getElementById(id)) { return; }
-    js = d.createElement(s); js.id = id;
-    js.src = "https://connect.facebook.net/en_US/sdk.js";
-    fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));

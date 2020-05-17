@@ -6,15 +6,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}{% endblock %}</title>
+
+
     <!-- css files -->
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-
     {% block style %}
     {% endblock %}
-    <script src="{% static 'js/connectapp.js' %}"></script>
+
+
     <!-- icons -->
     <link rel="stylesheet" href="{% static 'css/boxicons.min.css' %}">
+
+
+    <!-- script -->
+    <script src="{% static 'js/connectapp.js' %}"></script>
     <script src="{% static 'js/jquery-3.4.0.min.js' %}"></script>
 </head>
 
@@ -115,11 +121,15 @@
         </div>
     </div>
 
+
+
     <!-- bootstrap and jquery -->
 
     <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/zets.js' %}"></script>
+    {% block script %}
+    {% endblock %}
 </body>
 
 </html>

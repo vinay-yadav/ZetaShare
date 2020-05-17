@@ -15,42 +15,15 @@ function getCookie(name) {
     return cookieValue;
 }
 
-
 // facebook login
-function statusChangeCallback(response) {
-
-    if (response.status === 'connected') {
-        fetchdata();
-        $('.glog').attr('onclick', 'fbLogout()')
-        $('.login-sidebar').hide()
-
-    }
-    else {
-        $('#user-info').css('display', 'none')
-        $('.auth-button').css('display', 'block')                         // Not logged into your webpage or we are unable to tell.
-    }
-}
-
-
-function checkLoginState() {               // Called when a person is finished with the Login Button.
-    FB.getLoginStatus(function (response) {   // See the onlogin handler
-        statusChangeCallback(response);
-    });
-}
-
 
 window.fbAsyncInit = function () {
     FB.init({
-        //appId: '243240056787926',
-        appId: '735133187228573',
-        cookie: true,                     // Enable cookies to allow the server to access the session.
-        xfbml: true,                     // Parse social plugins on this webpage.
-        version: 'v6.0'           // Use this Graph API version for this call.
-    });
-
-
-    FB.getLoginStatus(function (response) {   // Called after the JS SDK has been initialized.
-        statusChangeCallback(response);        // Returns the login status.
+        appId: '243240056787926',
+        // appId: '735133187228573',
+        cookie: true,
+        xfbml: true,
+        version: 'v6.0'
     });
 };
 
@@ -65,13 +38,25 @@ window.fbAsyncInit = function () {
 }(document, 'script', 'facebook-jssdk'));
 
 
-function fetchdata() {                      // Testing Graph API after login.  See statusChangeCallback() for when this call is made.
-    console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', {fields: 'name, email, id'}, function (response) {
-        console.log(response)
-        document.getElementById('logged_user_name').innerHTML = response.name
+function checkLoginState() {
+    FB.getLoginStatus(function (response) {
+        statusChangeCallback(response);
+    });
+}
 
-        const user_data = {
+function statusChangeCallback(response) {
+    if (response.status === 'connected') {
+        fetchdata();
+    }
+}
+
+
+
+function fetchdata() {
+    console.log('Welcome!  Fetching your information.... ');
+    FB.api('/me', { fields: 'name, email, id' }, function (response) {
+        console.log(response)
+        let user_data = {
             userId: response.id,
             userName: response.name,
             userEmail: response.email
@@ -83,33 +68,19 @@ function fetchdata() {                      // Testing Graph API after login.  S
             data: user_data,
             headers: { "X-CSRFToken": getCookie('csrftoken') },
             success: function (res) {
+
                 window.location.replace(res.url)
+
+
             }
         })
 
     });
 }
 
-function fbLogout() {
-    FB.logout(function (response) {
-        console.log('logout successfully')
-        $('#user-info').css('display', 'none')
-        $('.auth-button').css('display', 'block')
-        location.reload()
-    })
-}
-
-
 // Google Login
 function onSignIn(googleUser) {
     var profile = googleUser.getBasicProfile();
-    document.getElementById('logged_user_name').innerHTML = profile.getName()
-    document.getElementById('user_profile_img').setAttribute('src', profile.getImageUrl())
-    // $('#user-info').css('display', 'block')
-    // $('.auth-button').css('display', 'none')
-    $('.glog').attr('onclick', 'gLogout()')
-    $('.login-sidebar').hide()
-
     // ajax to submit data to database
     const user_data = {
         userId: profile.getId(),
@@ -125,14 +96,17 @@ function onSignIn(googleUser) {
         data: user_data,
         headers: { "X-CSRFToken": getCookie('csrftoken') },
         success: function (res) {
+            console.log('google')
+            gLogout()
             window.location.replace(res.url)
+
         }
     })
 }
 
 function onFailure() {
     alert('not able to SignIn')
-    location.reload()
+    window.location.replace(res.url)
 }
 
 

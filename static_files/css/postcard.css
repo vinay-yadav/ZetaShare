@@ -1,0 +1,50 @@
+.button_upload {
+    background: white;
+    position: absolute;
+    bottom: 225px;
+    right: 25px;
+    z-index: 100;
+    box-shadow: 0 0 3px 1px #d0c8c8;
+    padding: 0 6px;
+    border-radius: 50%;
+}
+
+.button_upload label {
+    cursor: pointer;
+}
+
+#image_preview {
+    height: 15em;
+    object-fit: fill;
+    background: #f66cc3;
+}
+
+#post-content {
+    width: 100%;
+    resize: none;
+    font-size: 12px;
+    background: #f8f8ed;
+    border-color: #f0eaea;
+    outline: none;
+}
+
+.social-icon button {
+    outline: none;
+    padding: 0;
+    box-shadow: none;
+
+}
+
+.social-icon button:focus {
+    box-shadow: none;
+}
+
+#checked {
+    font-weight: 900;
+    color: #167f3a;
+    bottom: 28px;
+    font-size: 21px;
+    z-index: 150;
+    position: absolute;
+    margin: -3px -10px;
+}
