@@ -1,159 +1,51 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'zets/app-index.html' %}
+{%  load static %}
+{% block title %}Post Card{% endblock %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>card</title>
-
-    <!-- bootstrap css -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <!-- boxicon icon css -->
-    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.0.5/css/boxicons.min.css' rel='stylesheet'>
-
-    <style>
-        .button_upload {
-            background: white;
-            position: absolute;
-            bottom: 225px;
-            right: 25px;
-            z-index: 100;
-            box-shadow: 0 0 3px 1px #d0c8c8;
-            padding: 0 6px;
-            border-radius: 50%;
-        }
-
-        .button_upload label {
-            cursor: pointer;
-        }
-
-        #image_preview {
-            height: 15em;
-            object-fit: fill;
-            background: #f66cc3;
-        }
-
-        #post-content {
-            width: 100%;
-            resize: none;
-            font-size: 12px;
-            background: #f8f8ed;
-            border-color: #f0eaea;
-            outline: none;
-        }
-
-        .social-icon button {
-            outline: none;
-            padding: 0;
-            box-shadow: none;
-
-        }
-
-        .social-icon button:focus {
-            box-shadow: none;
-        }
-
-        #checked {
-            font-weight: 900;
-            color: #167f3a;
-            bottom: 28px;
-            font-size: 21px;
-            z-index: 150;
-            position: absolute;
-            margin: -3px -10px;
-        }
-    </style>
-</head>
+{% block style %}
+<link rel="stylesheet" href="{% static 'css/postcard.css' %}">
+{% endblock %}
 
 
+{% block content %}
+<div class="wrapper">
+    <form method="post" action="" id="post-form">
+        {%  csrf_token %}
+        <div class="card my-5" style="width: 18.5em;">
+            <img src="" id="image_preview" alt="">
 
-<body>
-    <div class="wrapper">
-        <form method="post" action="" id="post-form">
-            {%  csrf_token %}
-            <div class="card my-5" style="width: 18.5em;">
-                <img src="" id="image_preview" alt="">
-
-                <div class="button_upload" type="button">
-                    <input type="file" name="postimage" id="post" style="display: none;">
-                    <label for="post" role="button" class="my-0" onload="imagePreview()"> <i
-                            class='bx bx-upload'></i></label>
-                </div>
-                <hr class="my-0">
-                <div class="card-body p-3">
-                    <textarea name="post-content" id="post-content" rows="5"
-                        placeholder="Write your post caption..."></textarea>
-
-                    <h6 class="card-title text-muted">Also Share On</h6>
-                    <div class="social-icon float-sm-right">
-                        <button class="btn btn-default" type="button" onclick="social_selected(this)">
-                            <i class='bx bxl-facebook-circle' style='color:#ae9033;font-size: 26px;'></i>
-                        </button>
-                        <button class="btn btn-default" type="button" onclick="social_selected(this)">
-                            <i class='bx bxl-instagram' style='color:#ae9033;font-size: 26px;'></i>
-                        </button>
-                        <button class="btn btn-default" type="button" onclick="social_selected(this)">
-                            <i class='bx bxl-twitter' style='color:#ae9033;font-size: 26px;'></i>
-                        </button>
-                    </div>
-
-                </div>
-                <button type="submit">
-                    <div class="btn btn-primary float-sm">Post Now</div>
-                </button>
+            <div class="button_upload" type="button">
+                <input type="file" name="postimage" id="post" style="display: none;">
+                <label for="post" role="button" class="my-0" onload="imagePreview()"> <i
+                        class='bx bx-upload'></i></label>
             </div>
-        </form>
-    </div>
+            <hr class="my-0">
+            <div class="card-body p-3">
+                <textarea name="post-content" id="post-content" rows="5"
+                    placeholder="Write your post caption..."></textarea>
 
+                <h6 class="card-title text-muted">Also Share On</h6>
+                <div class="social-icon float-sm-right">
+                    <button class="btn btn-default" type="button" onclick="social_selected(this)">
+                        <i class='bx bxl-facebook-circle' style='color:#ae9033;font-size: 26px;'></i>
+                    </button>
+                    <button class="btn btn-default" type="button" onclick="social_selected(this)">
+                        <i class='bx bxl-instagram' style='color:#ae9033;font-size: 26px;'></i>
+                    </button>
+                    <button class="btn btn-default" type="button" onclick="social_selected(this)">
+                        <i class='bx bxl-twitter' style='color:#ae9033;font-size: 26px;'></i>
+                    </button>
+                </div>
 
+            </div>
+            <button type="submit" class="btn btn-primary">
+                POST NOW
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
 
-    <!-- bootstrap javascript -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-        crossorigin="anonymous"></script>
-    <script>
-
-        $('#post').change(function () {
-            imagePreview(this)
-        })
-        function imagePreview(file) {
-            if (file.files && file.files[0]) {
-                var reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById('image_preview').setAttribute('src', e.target.result)
-                }
-
-                reader.readAsDataURL(file.files[0]); // convert to base64 string
-
-
-            }
-        }
-
-        function social_selected(ref) {
-            console.log(ref.firstElementChild.style.color)
-            if (ref.firstElementChild.style.color !== "rgb(222, 221, 219)") {
-                ref.firstElementChild.style.color = "#dedddb"
-                const ele = document.createElement('i')
-                ele.setAttribute('class', 'bx bx-check')
-                ele.setAttribute('id', 'checked')
-                ref.appendChild(ele)
-                console.log('if block')
-            }
-            else {
-                console.log('else block')
-                ref.firstElementChild.style.color = "#ae9033"
-                ref.lastElementChild.remove()
-            }
-        }
-
-    </script>
-</body>
-
-</html>
+{% block script %}
+<script src="{% static 'js/postcard.js' %}"></script>
+{% endblock %}

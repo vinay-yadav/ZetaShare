@@ -7,8 +7,9 @@ def social_data_grabber(request, access_token, facebook_id):
     permanent_link = f"https://graph.facebook.com/v6.0/oauth/access_token?grant_type=fb_exchange_token&client_id={FACEBOOK_CLIENT_ID}&client_secret={FACEBOOK_SECRET_KEY}&fb_exchange_token={access_token}"
     permanent = requests.get(permanent_link).json()
 
-    page_token_link = f"https://graph.facebook.com/2864157427008021/accounts?access_token={permanent['access_token']}"
+    page_token_link = f"https://graph.facebook.com/{facebook_id}/accounts?access_token={permanent['access_token']}"
     page_token = requests.get(page_token_link).json()
+    print(page_token)
 
     obj = SocialData()
     obj.user = request.user
