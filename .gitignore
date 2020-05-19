@@ -1,9 +1,12 @@
 # Project exclude paths
 /venv/
+/__pycache__/
+/ZetaShare/secrets.py
+/ZetaShare/__pycache__/
+/zets/__pycache__/
 /zets/migrations/
-/frontliner/migrations
+/frontliner/migrations/
 db.sqlite3
-__pycache__
 .idea
 .env
 *.pyc
