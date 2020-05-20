@@ -55,7 +55,7 @@
 
                             <div class="card-body">
                                 <h5 class="card-title">Linkdin</h5>
-                                <button class="btn btn-primary my-3">Connect Your App</button>
+                                <button class="btn btn-primary my-3" onclick="window.open('{{ linkedin_url }}', '_blank', 'height=675, width=550, top=200, left=750')">Connect Your App</button>
                             </div>
                         </div>
                     </div>
@@ -77,6 +77,20 @@
                 </div>
             </div>
         </div>
+    </div>
+    <div class="table" style="margin-left: 20%">
+        <table>
+            <tr>
+                <th>Page Name</th>
+                <th>Action</th>
+            </tr>
+            {% for data in facebook %}
+                <tr>
+                    <td>{{ data.page_name }}</td>
+                    <td><button>Delete</button></td>
+                </tr>
+            {% endfor %}
+        </table>
     </div>
 </div>
 {% endblock %}
