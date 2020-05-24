@@ -39,3 +39,38 @@
         margin: 0 20px;
     }
 }
+
+
+/* item tabel */
+.app-mainconatiner{
+    box-shadow: 1px 1px 4px 0 #c2b7b7;
+    align-items: center;
+}
+.app-list-item{
+    width: 1000px;
+    margin: auto;
+}
+
+.bx-pencil{
+    cursor: pointer;
+}
+
+.account-name{
+    border: 0;
+    width: 100%;
+    font-weight: 600;
+    outline: none;
+}
+
+.divider{
+    width: 100%;
+    background: #e5e0e0;
+    height: 2px;
+}
+
+.app-createdAt{
+    font-size: 14px;
+    color: #a1a1a1;
+    display: block;
+    padding-top: 8px;
+}

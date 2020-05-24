@@ -55,7 +55,9 @@
 
                             <div class="card-body">
                                 <h5 class="card-title">Linkdin</h5>
-                                <button class="btn btn-primary my-3" onclick="window.open('{{ linkedin_url }}', '_blank', 'height=675, width=550, top=200, left=750')">Connect Your App</button>
+                                <button class="btn btn-primary my-3"
+                                    onclick="window.open('{{ linkedin_url }}', '_blank', 'height=675, width=550, top=200, left=750')">Connect
+                                    Your App</button>
                             </div>
                         </div>
                     </div>
@@ -78,19 +80,57 @@
             </div>
         </div>
     </div>
-    <div class="table" style="margin-left: 20%">
-        <table>
-            <tr>
-                <th>Page Name</th>
-                <th>Action</th>
-            </tr>
-            {% for data in facebook %}
-                <tr>
-                    <td>{{ data.page_name }}</td>
-                    <td><button>Delete</button></td>
-                </tr>
-            {% endfor %}
-        </table>
+
+    <div class="createdApp">
+        <ul class="applist" style="list-style: none;">
+            <li class="app-list-item">
+                <div class="app-mainconatiner d-flex my-3 p-3">
+                    <div class="app-icon">
+                        <img src="{% static 'images/icons8-facebook-50.png' %}" alt="facebook-icon" width="40px"
+                            height="40px">
+                    </div>
+                    <div class="app-info px-4" style="flex:1;">
+                        <div class="button-acc w-100 d-flex" style="align-items: center;">
+                            <i class='bx bx-pencil'></i>
+                            <div class="acc-name pl-1">
+                                <input type="text" placeholder="Account Name" class="account-name" name="accountname">
+                            </div>
+                        </div>
+                        <div class="divider"></div>
+                        <span class="app-createdAt">My first facebook Page App</span>
+                    </div>
+                    <div class="app-button mx-5">
+
+                        <div class="btn btn-danger px-4 mr-3">Disconnect</div>
+
+                    </div>
+                </div>
+            </li>
+
+            <!-- linkdin -->
+            <li class="app-list-item">
+                <div class="app-mainconatiner d-flex my-3 p-3">
+                    <div class="app-icon">
+                        <img src="{% static 'images/linkedin.png' %}" alt="facebook-icon" width="40px" height="40px">
+                    </div>
+                    <div class="app-info px-4" style="flex:1;">
+                        <div class="button-acc w-100 d-flex" style="align-items: center;">
+                            <i class='bx bx-pencil'></i>
+                            <div class="acc-name pl-1">
+                                <input type="text" placeholder="Account Name" class="account-name" name="accountname">
+                            </div>
+                        </div>
+                        <div class="divider"></div>
+                        <span class="app-createdAt">My first facebook Page App</span>
+                    </div>
+                    <div class="app-button mx-5">
+                        <div class="btn btn-primary px-4">Reconnect</div>
+                        <div class="btn btn-danger px-4 mr-3">Disconnect</div>
+
+                    </div>
+                </div>
+            </li>
+        </ul>
     </div>
 </div>
 {% endblock %}
