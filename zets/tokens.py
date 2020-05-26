@@ -2,24 +2,43 @@ import requests
 from django.shortcuts import HttpResponse, redirect
 from django.utils import timezone
 from ZetaShare.secrets import FACEBOOK_CLIENT_ID, FACEBOOK_SECRET_KEY, LINKEDIN_CLIENT_ID, LINKEDIN_SECRET_KEY
-from .models import Facebook, LinkedIn
+from .models import SocialMedia, Connections
 
 
-def facebook_data(request, access_token, facebook_id):
+def facebook_data(request):
+    name = request.POST.get('name').split()
+    email = request.POST.get('email')
+    facebook_id = request.POST.get('userId')
+    picture = request.POST.get('userImg')
+    access_token = request.POST.get('AccessToken')
+
     permanent_link = f"https://graph.facebook.com/v6.0/oauth/access_token?grant_type=fb_exchange_token&client_id={FACEBOOK_CLIENT_ID}&client_secret={FACEBOOK_SECRET_KEY}&fb_exchange_token={access_token}"
     permanent = requests.get(permanent_link).json()
 
     page_token_link = f"https://graph.facebook.com/{facebook_id}/accounts?access_token={permanent['access_token']}"
     page_token = requests.get(page_token_link).json()
 
+    try:
+        social = SocialMedia.objects.get(user=request.user, provider='Facebook')
+    except SocialMedia.DoesNotExist:
+        social = SocialMedia()
+        social.user = request.user
+        social.provider = 'Facebook'
+        social.social_id = facebook_id
+        social.first_name = name[0]
+        social.last_name = name[1]
+        social.email = email
+        social.profile_pic = picture
+        social.save()
+
     for i in range(len(page_token['data'])):
-        obj = Facebook()
-        obj.user = request.user
-        obj.facebook_id = facebook_id
-        obj.page_id = page_token['data'][i]['id']
+        obj = Connections()
+        obj.social = social
+        obj.posting_id = page_token['data'][i]['id']
         obj.page_name = page_token['data'][i]['name']
-        obj.page_access_token = page_token['data'][i]['access_token']
+        obj.access_token = page_token['data'][i]['access_token']
         obj.save()
+
     print('data saved')
 
 
@@ -32,19 +51,24 @@ def linkedin_data(request):
     user_data = requests.get('https://api.linkedin.com/v2/me', headers={'Connection': 'Keep-Alive', 'Authorization': f'Bearer {access_token["access_token"]}'}).json()
 
     try:
-        account = LinkedIn.objects.get(user=request.user)
-        account.access_token = access_token['access_token']
-        account.token_expiration_date = timezone.now() + timezone.timedelta(days=58)
-        account.save()
-        print('LinkedIn Data Updated')
-    except LinkedIn.DoesNotExist:
-        obj = LinkedIn()
-        obj.user = request.user
-        obj.linkedin_id = user_data['id']
-        obj.access_token = access_token['access_token']
-        obj.token_expiration_date = timezone.now() + timezone.timedelta(days=58)
-        obj.save()
-        print('LinkedIn Data Saved')
+        social = SocialMedia.objects.get(user=request.user, provider='LinkedIn')
+    except SocialMedia.DoesNotExist:
+        social = SocialMedia()
+        social.user = request.user
+        social.provider = 'LinkedIn'
+        social.social_id = user_data['id']
+        social.first_name = user_data['localizedFirstName']
+        social.last_name = user_data['localizedLastName']
+        social.save()
+
+    obj = Connections()
+    obj.social = social
+    obj.posting_id = user_data['id']
+    obj.access_token = access_token['access_token']
+    obj.token_expiration_date = timezone.now() + timezone.timedelta(days=58)
+    obj.save()
+
+    print('LinkedIn Data Saved')
     return HttpResponse('<script type="text/javascript">window.close()</script>')
 
 

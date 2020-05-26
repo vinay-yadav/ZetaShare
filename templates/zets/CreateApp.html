@@ -56,8 +56,9 @@
                             <div class="card-body">
                                 <h5 class="card-title">Linkdin</h5>
                                 <button class="btn btn-primary my-3"
-                                    onclick="window.open('{{ linkedin_url }}', '_blank', 'height=675, width=550, top=200, left=750')">Connect
-                                    Your App</button>
+                                    onclick="window.open('https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=864p2i6fecc0u6&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fapp%2Flinkedin-oauth2%2Fcallback&state=oath-linkedin&scope=r_liteprofile,r_emailaddress,w_member_social', '_blank', 'height=675, width=550, top=200, left=750')">
+                                    Connect Your App
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -83,6 +84,7 @@
 
     <div class="createdApp">
         <ul class="applist" style="list-style: none;">
+            {% for face in facebook %}
             <li class="app-list-item">
                 <div class="app-mainconatiner d-flex my-3 p-3">
                     <div class="app-icon">
@@ -93,11 +95,11 @@
                         <div class="button-acc w-100 d-flex" style="align-items: center;">
                             <i class='bx bx-pencil'></i>
                             <div class="acc-name pl-1">
-                                <input type="text" placeholder="Account Name" class="account-name" name="accountname">
+                                <input type="text" placeholder="Account Name" class="account-name" value="{{ face.page_name }}">
                             </div>
                         </div>
                         <div class="divider"></div>
-                        <span class="app-createdAt">My first facebook Page App</span>
+                        <span class="app-createdAt">Added On: {{ face.added_on }}</span>
                     </div>
                     <div class="app-button mx-5">
 
@@ -106,8 +108,10 @@
                     </div>
                 </div>
             </li>
+            {% endfor %}
 
             <!-- linkdin -->
+        {% for link in linkedin %}
             <li class="app-list-item">
                 <div class="app-mainconatiner d-flex my-3 p-3">
                     <div class="app-icon">
@@ -117,19 +121,22 @@
                         <div class="button-acc w-100 d-flex" style="align-items: center;">
                             <i class='bx bx-pencil'></i>
                             <div class="acc-name pl-1">
-                                <input type="text" placeholder="Account Name" class="account-name" name="accountname">
+                                <input type="text" placeholder="Account Name" class="account-name" value="{{ link.linkedin_id }}">
                             </div>
                         </div>
                         <div class="divider"></div>
-                        <span class="app-createdAt">My first facebook Page App</span>
+                        <span class="app-createdAt">Added On: {{ link.added_on }}</span>
                     </div>
-                    <div class="app-button mx-5">
-                        <div class="btn btn-primary px-4">Reconnect</div>
-                        <div class="btn btn-danger px-4 mr-3">Disconnect</div>
 
+                    <div class="app-button mx-5">
+                        {%  if today.date >= link.token_expiration_date %}
+                            <div class="btn btn-primary px-4">Reconnect</div>
+                        {% endif %}
+                        <div class="btn btn-danger px-4 mr-3">Disconnect</div>
                     </div>
                 </div>
             </li>
+        {% endfor %}
         </ul>
     </div>
 </div>

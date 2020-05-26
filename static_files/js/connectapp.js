@@ -55,6 +55,7 @@ var userdata = {
     userId: '',
     name: '',
     email: '',
+    userImg: '',
     AccessToken: ''
 }
 function statusCheck(response) {
@@ -72,10 +73,11 @@ function statusCheck(response) {
 
 function isuserlogged(response) {
     userdata.AccessToken = response.authResponse.accessToken
-    FB.api('/me', { fields: 'name, email, gender' }, function (response) {
-        userdata.name = response.name
+    FB.api('/me', { fields: 'name, email, gender, picture' }, function (response) {
         userdata.userId = response.id
+        userdata.name = response.name
         userdata.email = response.email
+        userdata.userImg = response.picture.data.url
         console.log(userdata)
 
         $.ajax({
