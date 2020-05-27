@@ -30,6 +30,7 @@ def connections(request):
     if request.method == 'POST':
         facebook_data(request)
         return JsonResponse({'msg': 'Connect App DOne'})
+
     context = {
         'facebook': Connections.objects.filter(social__user=request.user, social__provider='Facebook'),
         'linkedin': Connections.objects.filter(social__user=request.user, social__provider='LinkedIn'),

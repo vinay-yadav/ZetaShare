@@ -32,14 +32,21 @@ def facebook_data(request):
         social.save()
 
     for i in range(len(page_token['data'])):
-        obj = Connections()
-        obj.social = social
-        obj.posting_id = page_token['data'][i]['id']
-        obj.page_name = page_token['data'][i]['name']
-        obj.access_token = page_token['data'][i]['access_token']
-        obj.save()
+        page_id = page_token['data'][i]['id']
 
-    print('data saved')
+        try:
+            conn = Connections.objects.get(social__user=request.user, posting_id=page_id)
+
+        except Connections.DoesNotExist:
+            conn = Connections()
+
+        conn.social = social
+        conn.posting_id = page_id
+        conn.page_name = page_token['data'][i]['name']
+        conn.access_token = page_token['data'][i]['access_token']
+        conn.save()
+
+    print('Facebook Data Saved')
 
 
 def linkedin_data(request):
@@ -48,7 +55,8 @@ def linkedin_data(request):
     url = f'https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code={code}&redirect_uri={redirect_uri}&client_id={LINKEDIN_CLIENT_ID}&client_secret={LINKEDIN_SECRET_KEY}'
     access_token = requests.post(url).json()
 
-    user_data = requests.get('https://api.linkedin.com/v2/me', headers={'Connection': 'Keep-Alive', 'Authorization': f'Bearer {access_token["access_token"]}'}).json()
+    user_data = requests.get('https://api.linkedin.com/v2/me', headers={'Connection': 'Keep-Alive',
+                                                                        'Authorization': f'Bearer {access_token["access_token"]}'}).json()
 
     try:
         social = SocialMedia.objects.get(user=request.user, provider='LinkedIn')
@@ -61,9 +69,16 @@ def linkedin_data(request):
         social.last_name = user_data['localizedLastName']
         social.save()
 
-    obj = Connections()
+    user_id = user_data['id']
+
+    try:
+        obj = Connections.objects.get(social__user=request.user, posting_id=user_id)
+
+    except Connections.DoesNotExist:
+        obj = Connections()
+
     obj.social = social
-    obj.posting_id = user_data['id']
+    obj.posting_id = user_id
     obj.access_token = access_token['access_token']
     obj.token_expiration_date = timezone.now() + timezone.timedelta(days=58)
     obj.save()
