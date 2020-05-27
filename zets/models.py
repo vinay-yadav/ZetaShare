@@ -1,37 +1,76 @@
 from django.db import models
-from django.conf import settings
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
 
-class Facebook(models.Model):
+provider = [
+    ('Facebook', 'Facebook'),
+    ('Google', 'Google'),
+    ('LinkedIn', 'LinkedIn')
+]
+
+status = [
+    ('Completed', 'Completed'),
+    ('Pending', 'Pending')
+]
+
+
+class SocialMedia(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     added_on = models.DateTimeField(auto_now_add=True)
-    facebook_id = models.CharField(max_length=99)
-    page_id = models.CharField(max_length=99, primary_key=True)
-    page_name = models.CharField(max_length=30)
-    page_access_token = models.CharField(max_length=200)
-
-    class Meta:
-        verbose_name_plural = 'Facebook Data'
+    provider = models.CharField(max_length=10, choices=provider)
+    social_id = models.CharField(max_length=99, primary_key=True)
+    first_name = models.CharField(max_length=10)
+    last_name = models.CharField(max_length=10)
+    email = models.EmailField(null=True, blank=True)
+    profile_pic = models.URLField(null=True, blank=True)
 
     def __str__(self):
-        return self.facebook_id
+        return self.provider + ' ' + self.user.username
+
+    class Meta:
+        verbose_name_plural = 'Social Accounts'
 
 
-class LinkedIn(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    added_on = models.DateTimeField(auto_now_add=True)
-    linkedin_id = models.CharField(max_length=99, primary_key=True)
+class Connections(models.Model):
+    added_on = models.DateTimeField(auto_now=True)
+    social = models.ForeignKey(SocialMedia, on_delete=models.CASCADE)
+    posting_id = models.CharField(max_length=99, primary_key=True)
+    page_name = models.CharField(max_length=30, null=True, blank=True)
     access_token = models.CharField(max_length=360)
-    token_expiration_date = models.DateField()
-
-    class Meta:
-        verbose_name_plural = 'LinkedIn Data'
+    token_expiration_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
-        return self.linkedin_id
+        return self.social.provider + ' ' + self.social.user.username
+
+    class Meta:
+        verbose_name_plural = 'Social Connections'
+
+
+class Posts(models.Model):
+    app = models.ForeignKey(Connections, on_delete=models.CASCADE)
+    added_on = models.DateTimeField(auto_now_add=True)
+    post_on = models.DateTimeField()
+    status = models.CharField(max_length=10, choices=status)
+
+    def __str__(self):
+        return self.app.social.user.username + ' ' + self.app.social.provider
+
+    class Meta:
+        verbose_name_plural = 'Posts'
+
+
+class PostMedia(models.Model):
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE)
+    caption = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='images/', null=True, blank=True)
+
+    def __str__(self):
+        return self.post.app.social.user.username + ' ' + self.post.app.social.provider
+
+    class Meta:
+        verbose_name_plural = 'Posts Media '
 
 
 # class EmailAuthentication(models.Model):

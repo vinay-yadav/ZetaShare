@@ -1,12 +1,16 @@
 from django.contrib import admin
-from .models import Facebook, LinkedIn
+from .models import SocialMedia, Connections, Posts, PostMedia
 
 
-@admin.register(Facebook)
-class FacebookAdmin(admin.ModelAdmin):
-    list_display = ['user', 'facebook_id', 'page_name', 'added_on']
+@admin.register(SocialMedia)
+class SocialMediaAdmin(admin.ModelAdmin):
+    list_display = ['user', 'provider', 'added_on']
 
 
-@admin.register(LinkedIn)
-class LinkedInAdmin(admin.ModelAdmin):
-    list_display = ['user', 'linkedin_id', 'added_on', 'token_expiration_date']
+@admin.register(Connections)
+class ConnectionsAdmin(admin.ModelAdmin):
+    list_display = ['social', 'posting_id', 'page_name', 'added_on']
+
+
+admin.site.register(Posts)
+admin.site.register(PostMedia)

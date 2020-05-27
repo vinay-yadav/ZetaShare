@@ -1,11 +1,10 @@
-import requests
+import datetime
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
-from ZetaShare.secrets import LINKEDIN_CLIENT_ID
 from .forms import EditProfileForm
-from .models import Facebook
+from .models import Connections
 from .tokens import facebook_data, post_now
 
 
@@ -29,14 +28,12 @@ def user_profile(request):
 
 def connections(request):
     if request.method == 'POST':
-        access_token = request.POST.get('AccessToken')
-        fb_id = request.POST.get('userId')
-
-        facebook_data(request, access_token, fb_id)
+        facebook_data(request)
         return JsonResponse({'msg': 'Connect App DOne'})
     context = {
-        'facebook': Facebook.objects.filter(user=request.user),
-        'linkedin_url': f'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={LINKEDIN_CLIENT_ID}&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fapp%2Flinkedin-oauth2%2Fcallback&state=oath-linkedin&scope=r_liteprofile,r_emailaddress,w_member_social'
+        'facebook': Connections.objects.filter(social__user=request.user, social__provider='Facebook'),
+        'linkedin': Connections.objects.filter(social__user=request.user, social__provider='LinkedIn'),
+        'today': datetime.datetime.now()
     }
     return render(request, 'zets/CreateApp.html', context)
 

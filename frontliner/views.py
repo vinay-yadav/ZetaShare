@@ -13,6 +13,7 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .forms import SignUpForm, LoginForm
 from .tokens import account_activation_token, password_change_token
+from zets.models import SocialMedia
 
 
 def home(request):
@@ -155,14 +156,28 @@ def social_auth(request):
         username = request.POST.get('userId')
         name = request.POST.get('userName').split()
         email = request.POST.get('userEmail')
+        provider = request.POST.get('provider')
+        profile_pic = request.POST.get('userImg')
 
         try:
             user = User.objects.get(username=username)
-            # login(request, user)
+
+            obj = SocialMedia.objects.get(social_id=username)
+            obj.user = user
+            obj.provider = provider
+            obj.social_id = username
+            obj.first_name = name[0]
+            obj.last_name = name[1]
+            obj.email = email
+            obj.profile_pic = profile_pic
+            obj.save()
             print('login')
+
         except User.DoesNotExist:
             user = User(username=username, first_name=name[0], last_name=name[1], email=email)
             user.save()
+
+            SocialMedia(user=user, provider=provider, social_id=username, first_name=name[0], last_name=name[1], email=email, profile_pic=profile_pic).save()
             print('signup')
 
         login(request, user)

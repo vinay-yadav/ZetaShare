@@ -54,12 +54,14 @@ function statusChangeCallback(response) {
 
 function fetchdata() {
     console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', { fields: 'name, email, id' }, function (response) {
+    FB.api('/me', { fields: 'name, email, id, picture' }, function (response) {
         console.log(response)
         let user_data = {
             userId: response.id,
             userName: response.name,
-            userEmail: response.email
+            userEmail: response.email,
+            userImg: response.picture.data.url,
+            provider: 'Facebook'
         }
         console.log(user_data)
         $.ajax({
@@ -68,10 +70,7 @@ function fetchdata() {
             data: user_data,
             headers: { "X-CSRFToken": getCookie('csrftoken') },
             success: function (res) {
-
                 window.location.replace(res.url)
-
-
             }
         })
 
@@ -87,6 +86,7 @@ function onSignIn(googleUser) {
         userName: profile.getName(),
         userEmail: profile.getEmail(),
         userImg: profile.getImageUrl(),
+        provider: 'Google'
         // accessToken: googleUser.getAuthResponse().access_token
     }
 
