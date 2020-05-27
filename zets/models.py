@@ -20,7 +20,7 @@ class SocialMedia(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     added_on = models.DateTimeField(auto_now_add=True)
     provider = models.CharField(max_length=10, choices=provider)
-    social_id = models.CharField(max_length=99, primary_key=True)
+    social_id = models.CharField(max_length=99)
     first_name = models.CharField(max_length=10)
     last_name = models.CharField(max_length=10)
     email = models.EmailField(null=True, blank=True)
@@ -36,7 +36,7 @@ class SocialMedia(models.Model):
 class Connections(models.Model):
     added_on = models.DateTimeField(auto_now=True)
     social = models.ForeignKey(SocialMedia, on_delete=models.CASCADE)
-    posting_id = models.CharField(max_length=99, primary_key=True)
+    posting_id = models.CharField(max_length=99)
     page_name = models.CharField(max_length=30, null=True, blank=True)
     access_token = models.CharField(max_length=360)
     token_expiration_date = models.DateField(null=True, blank=True)

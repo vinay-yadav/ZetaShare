@@ -40,15 +40,17 @@ def login_request(request):
         if form.is_valid():
             username = request.POST.get('username')
             password = request.POST.get('password')
-            user = authenticate(username=username, password=password)
+
+            if '@' in username:
+                user = User.objects.get(email=username)
+            else:
+                user = authenticate(username=username, password=password)
             if user:
                 login(request, user)
                 return JsonResponse({'msg': f"Logged in as {username}", 'url': '/app/dashboard/'})
 
         else:
-            response = JsonResponse({'error': form.errors})
-            response.status_code = 401
-            return response
+            return JsonResponse({'error': form.errors}, status=401)
 
     else:
         return redirect("main:home")
@@ -161,24 +163,23 @@ def social_auth(request):
 
         try:
             user = User.objects.get(username=username)
-
-            obj = SocialMedia.objects.get(social_id=username)
-            obj.user = user
-            obj.provider = provider
-            obj.social_id = username
-            obj.first_name = name[0]
-            obj.last_name = name[1]
-            obj.email = email
-            obj.profile_pic = profile_pic
-            obj.save()
             print('login')
+            obj = SocialMedia.objects.get(social_id=username)
 
-        except User.DoesNotExist:
+        except (User.DoesNotExist, SocialMedia.DoesNotExist):
             user = User(username=username, first_name=name[0], last_name=name[1], email=email)
             user.save()
-
-            SocialMedia(user=user, provider=provider, social_id=username, first_name=name[0], last_name=name[1], email=email, profile_pic=profile_pic).save()
             print('signup')
+            obj = SocialMedia()
+
+        obj.user = user
+        obj.provider = provider
+        obj.social_id = username
+        obj.first_name = name[0]
+        obj.last_name = name[1]
+        obj.email = email
+        obj.profile_pic = profile_pic
+        obj.save()
 
         login(request, user)
         return JsonResponse({'msg': 'completed', 'url': '/app/dashboard/'})
