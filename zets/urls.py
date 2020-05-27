@@ -9,5 +9,6 @@ urlpatterns = [
     path('profile/', user_profile, name='profile'),
     path('connect-app/', connections, name='connectApp'),
     path('create-zets/', card, name='card'),
-    path('linkedin-oauth2/callback/', linkedin_data, name="linkedin")
+    path('linkedin-oauth2/callback/', linkedin_data, name="linkedin"),
+    path('connected/fetch/',appfetch)
     ]

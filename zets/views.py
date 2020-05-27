@@ -6,8 +6,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import EditProfileForm
 from .models import Connections
 from .tokens import facebook_data, post_now
-
-
+import json
+from django.core import serializers
 @login_required(login_url='main:home')
 def dashboard(request):
     return render(request, 'zets/dashboard.html')
@@ -43,3 +43,10 @@ def card(request):
         content = request.POST.get('post-content')
         post_now(request, msg=content)
     return render(request, 'zets/card.html')
+
+def appfetch(request):
+    facebook_raw = Connections.objects.filter(social__user=request.user, social__provider='Facebook')
+    facebook_list = serializers.serialize('json',facebook_raw)
+    facebook = json.load(facebook_list)
+    print(facebook)
+    return JsonResponse({'facebook':facebook})

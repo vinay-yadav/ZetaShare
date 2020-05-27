@@ -18,8 +18,8 @@ function getCookie(name) {
 // create app
 window.fbAsyncInit = function () {
     FB.init({
-        // appId: '243240056787926',
-        appId: '735133187228573',
+        appId: '243240056787926',
+        // appId: '735133187228573',
         cookie: true,
         xfbml: true,
         version: 'v6.0'
@@ -86,7 +86,7 @@ function isuserlogged(response) {
             data: userdata,
             headers: { "X-CSRFToken": getCookie('csrftoken') },
             success: function (res) {
-                console.log(res.msg)
+                console.log()
             }
         })
     })
@@ -96,4 +96,89 @@ function LogoutFacebookApp() {
     document.getElementById('fbconnect').innerHTML = 'Connect Your App'
 }
 
+
+function fetchAppList(){
+    $.ajax({
+        type:'get',
+        url:'/app/connected/fetch/',
+        async:false,
+        success:function(res){
+            console.log(res)
+            
+        }
+    })
+}
+
+function createAppList(){
+    const ul = document.getElementById('setup-app')
+    const li = document.createElement('li')
+    li.setAttribute('class','app-list-item')
+
+    const divappcontain = document.createElement('div')
+    divappcontain.setAttribute('class','app-mainconatiner d-flex my-3 p-3')
+
+    const appIcon = document.createElement('div')
+    appIcon.setAttribute('class','app-icon')
+
+    const iconImg = document.createElement('img')
+    let iconattr = {
+        'src':'/static/images/icons8-facebook-50.png',
+        'alt':'facebook-icon',
+        'width':'40px',
+        'height':'40px'
+    }
+    keyloop(iconImg,iconattr)
+    const appInfo = document.createElement('div')
+    let infoattr = {
+        'class':'app-info px-4',
+        'style':'flex:1'
+    }
+    
+
+    keyloop(appInfo,infoattr)
+    const buttonAcc = document.createElement('div')
+    let buttonattr = {
+        'class':'button-acc w-100 d-flex',
+        'style':'align-item:conter'
+    }
+    keyloop(buttonAcc,buttonattr)
+    
+    const icon = document.createElement('i')
+    icon.setAttribute('class','bx bx-pencil')
+    const accNameDiv = document.createElement('div')
+    accNameDiv.setAttribute('class','acc-name pl-1')
+    const accName = document.createElement('input')
+    let nameattr = {
+        'class':'account-name',
+        'type':'text',
+        'placeholder':'Account Name',
+        'value':''
+    }
+
+    keyloop(accName,nameattr)
+      const divider = document.createElement('div')
+      divider.setAttribute('class','divider')
+
+      const span = document.createElement('span')
+      span.setAttribute('class','app-createdAt')
+      span.innerHTML = 'Added On : 22/06/1999'
+    
+      li.appendChild(divappcontain)
+      divappcontain.appendChild(appIcon)
+      divappcontain.appendChild(appInfo)
+      appIcon.appendChild(iconImg)
+      appInfo.appendChild(buttonAcc)
+      buttonAcc.appendChild(icon)
+      buttonAcc.appendChild(accNameDiv)
+      accNameDiv.appendChild(accName)
+           
+      ul.append(li)
+}
+
+function keyloop(element,attrs){
+    for(let i in attrs){
+        element.setAttribute(i,attrs[i])
+
+    }
+}
 

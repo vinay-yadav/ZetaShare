@@ -40,7 +40,7 @@
 
                             <div class="card-body">
                                 <h5 class="card-title">Instagram</h5>
-                                <button class="btn btn-primary my-3">Connect Your App</button>
+                                <button class="btn btn-primary my-3" onclick="fetchAppList()">Connect Your App</button>
                             </div>
                         </div>
                     </div>
@@ -83,7 +83,7 @@
     </div>
 
     <div class="createdApp">
-        <ul class="applist" style="list-style: none;">
+        <ul class="applist" id="setup-app" style="list-style: none;">
             {% for face in facebook %}
             <li class="app-list-item">
                 <div class="app-mainconatiner d-flex my-3 p-3">
