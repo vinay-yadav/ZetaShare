@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 
 class LoginForm(AuthenticationForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username or email address'}))
     password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
 
     def clean(self, *args, **kwargs):
@@ -13,7 +13,10 @@ class LoginForm(AuthenticationForm):
 
         if username and password:
             try:
-                user = User.objects.get(username=username)
+                if '@' in username:
+                    user = User.objects.get(email=username)
+                else:
+                    user = User.objects.get(username=username)
 
                 if not user.check_password(raw_password=password):
                     raise forms.ValidationError('Incorrect Password')
