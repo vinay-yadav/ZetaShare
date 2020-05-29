@@ -6,7 +6,10 @@ from django.contrib.auth.decorators import login_required
 from .forms import EditProfileForm
 from .models import Connections
 from .tokens import facebook_data, post_now
-
+import json
+from django.core import serializers
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 
 @login_required(login_url='main:home')
 def dashboard(request):
@@ -44,3 +47,49 @@ def card(request):
         content = request.POST.get('post-content')
         post_now(request, msg=content)
     return render(request, 'zets/card.html')
+
+def appfetch(request):
+    data = []
+
+    try:
+        fb_qs = Connections.objects.filter(social__user=request.user, social__provider='Facebook')    
+
+        for face in fb_qs:
+            facebook = {
+                'provider': 'Facebook',
+                'added_on': face.added_on.date(),
+                'posting_id': urlsafe_base64_encode(force_bytes(face.posting_id)),
+                'page_name': face.page_name,
+            }
+            data.append(facebook)
+
+    except Connections.DoesNotExist:
+        pass
+
+
+    try:
+        link_qs = Connections.objects.filter(social__user=request.user, social__provider='LinkedIn')
+
+        for link in link_qs:
+            linkedin = {
+                'provider': 'LinkedIn',
+                'added_on': link.added_on.date(),
+                'posting_id': urlsafe_base64_encode(force_bytes(link.posting_id)),
+                'page_name': link.page_name,
+                'token_expiration': link.token_expiration_date
+            }
+            data.append(linkedin)
+
+    except Connections.DoesNotExist:
+        pass
+    
+    return JsonResponse({'data': data,'today':datetime.datetime.now().date()})
+
+def delete_app(request):
+    pid = request.GET.get('pid')
+    posting_id = force_text(urlsafe_base64_decode(pid))
+    qs = Connections.objects.get(posting_id=posting_id)
+    qs.delete()
+
+    data = appfetch(request)
+    return data
