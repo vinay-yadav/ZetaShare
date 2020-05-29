@@ -1,4 +1,7 @@
 // Get CSRF Token
+$(document).ready(function(){
+    fetchAppList()
+})
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -24,11 +27,6 @@ window.fbAsyncInit = function () {
         xfbml: true,
         version: 'v6.0'
     });
-
-    FB.getLoginStatus(function (response) {
-        statusCheck(response)
-    })
-
 };
 
 (function (d, s, id) {
@@ -47,7 +45,6 @@ function CreateFacebookApp() {
         if (response.status === "connected") {
             isuserlogged(response)
         }
-        statusCheck(response)
     }, { scope: 'manage_pages,publish_pages, pages_show_list' })
 }
 
@@ -58,18 +55,6 @@ var userdata = {
     userImg: '',
     AccessToken: ''
 }
-function statusCheck(response) {
-    if (response.status === 'connected') {
-        document.getElementById('fbconnect').setAttribute('onclick', 'LogoutFacebookApp()')
-        document.getElementById('fbconnect').innerHTML = 'disconnect'
-
-
-    }
-    else {
-        document.getElementById('fbconnect').setAttribute('onclick', 'CreateFacebookApp()')
-        document.getElementById('fbconnect').innerHTML = 'Connect Your App'
-    }
-}
 
 function isuserlogged(response) {
     userdata.AccessToken = response.authResponse.accessToken
@@ -78,24 +63,18 @@ function isuserlogged(response) {
         userdata.name = response.name
         userdata.email = response.email
         userdata.userImg = response.picture.data.url
-        console.log(userdata)
-
+        
         $.ajax({
             method: 'post',
             url: '/app/connect-app/',
             data: userdata,
             headers: { "X-CSRFToken": getCookie('csrftoken') },
             success: function (res) {
-                console.log()
+                fetchAppList()
             }
         })
     })
 }
-function LogoutFacebookApp() {
-    document.getElementById('fbconnect').setAttribute('onclick', 'CreateFacebookApp()')
-    document.getElementById('fbconnect').innerHTML = 'Connect Your App'
-}
-
 
 function fetchAppList(){
     $.ajax({
@@ -103,14 +82,16 @@ function fetchAppList(){
         url:'/app/connected/fetch/',
         async:false,
         success:function(res){
-            console.log(res)
-            
+            createAppList(res)          
         }
     })
 }
 
-function createAppList(){
+function createAppList(res){
     const ul = document.getElementById('setup-app')
+    ul.innerHTML=""
+
+    for(i in res.data){
     const li = document.createElement('li')
     li.setAttribute('class','app-list-item')
 
@@ -121,11 +102,42 @@ function createAppList(){
     appIcon.setAttribute('class','app-icon')
 
     const iconImg = document.createElement('img')
-    let iconattr = {
-        'src':'/static/images/icons8-facebook-50.png',
-        'alt':'facebook-icon',
-        'width':'40px',
-        'height':'40px'
+    var iconattr = {
+        src:'',
+        alt:'',
+        width:'40px',
+        height:'40px'
+    }
+    if(res.data[i].provider ==='Facebook'){
+
+        iconattr.src = '/static/images/icons8-facebook-50.png/'
+        iconattr.alt = 'facebook-icon'
+        var disconnect = document.createElement('div')
+        disconnect.innerHTML = 'Disconnect'
+        disconnectattrs = {
+            'class':'btn btn-danger px-4 ',
+            'id':res.data[i].posting_id,
+            'onclick': 'disconnectApp(this)'
+        }
+         keyloop(disconnect,disconnectattrs)
+    }
+    if(res.data[i].provider ==='LinkedIn'){
+        
+        iconattr.src = '/static/images/linkedin.png'
+        iconattr.alt = 'linkedin-icon'        
+        var reconnect = document.createElement('div')
+          reconnect.setAttribute('class','btn btn-primary px-4 ')
+          reconnect.innerHTML = 'Reconnect'
+
+
+        var disconnect = document.createElement('div')
+        disconnectattrs = {
+            'class':'btn btn-danger px-4 ml-3',
+            'id':res.data[i].posting_id,
+            'onclick': 'disconnectApp(this)'
+        }
+         keyloop(disconnect,disconnectattrs)
+          disconnect.innerHTML = 'Disconnect'
     }
     keyloop(iconImg,iconattr)
     const appInfo = document.createElement('div')
@@ -152,7 +164,7 @@ function createAppList(){
         'class':'account-name',
         'type':'text',
         'placeholder':'Account Name',
-        'value':''
+        'value':res.data[i].page_name
     }
 
     keyloop(accName,nameattr)
@@ -161,18 +173,37 @@ function createAppList(){
 
       const span = document.createElement('span')
       span.setAttribute('class','app-createdAt')
-      span.innerHTML = 'Added On : 22/06/1999'
-    
+      const date = new Date(res.data[i].added_on)
+      date.toDateString()
+      span.innerHTML = date
+
+      const appbutton = document.createElement('div')
+      appbutton.setAttribute('class','app-button mx-5')
+
       li.appendChild(divappcontain)
       divappcontain.appendChild(appIcon)
       divappcontain.appendChild(appInfo)
+      divappcontain.appendChild(appbutton)
+      if(res.data[i].provider === 'Facebook'){
+        appbutton.appendChild(disconnect)
+      }
+      if(res.data[i].provider === 'LinkedIn'){
+        appbutton.appendChild(reconnect)
+        appbutton.appendChild(disconnect)
+      }
+      
       appIcon.appendChild(iconImg)
       appInfo.appendChild(buttonAcc)
+      appInfo.appendChild(divider)
+      appInfo.appendChild(span)
       buttonAcc.appendChild(icon)
       buttonAcc.appendChild(accNameDiv)
       accNameDiv.appendChild(accName)
-           
-      ul.append(li)
+      ul.appendChild(li)
+    }
+        
+
+      
 }
 
 function keyloop(element,attrs){
@@ -182,3 +213,15 @@ function keyloop(element,attrs){
     }
 }
 
+// function for disconnect app
+
+function disconnectApp(ref){
+    $.ajax({
+        type:'get',
+        url:'/app/connected/delete/',
+        data:{pid:ref.getAttribute('id')},
+        success:function(res){
+            createAppList(res)
+        }
+    })
+}
