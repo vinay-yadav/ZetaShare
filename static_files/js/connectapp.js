@@ -1,7 +1,9 @@
-// Get CSRF Token
 $(document).ready(function(){
     fetchAppList()
 })
+
+
+// Get CSRF Token
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -21,8 +23,8 @@ function getCookie(name) {
 // create app
 window.fbAsyncInit = function () {
     FB.init({
-        appId: '243240056787926',
-        // appId: '735133187228573',
+        // appId: '243240056787926',
+        appId: '735133187228573',
         cookie: true,
         xfbml: true,
         version: 'v6.0'
@@ -201,15 +203,12 @@ function createAppList(res){
       accNameDiv.appendChild(accName)
       ul.appendChild(li)
     }
-        
-
-      
 }
+
 
 function keyloop(element,attrs){
     for(let i in attrs){
-        element.setAttribute(i,attrs[i])
-
+        element.setAttribute(i, attrs[i])
     }
 }
 
@@ -217,10 +216,11 @@ function keyloop(element,attrs){
 
 function disconnectApp(ref){
     $.ajax({
-        type:'get',
-        url:'/app/connected/delete/',
-        data:{pid:ref.getAttribute('id')},
-        success:function(res){
+        type: 'post',
+        url: '/app/connected/delete/',
+        data: {pid: ref.getAttribute('id')},
+        headers: { "X-CSRFToken": getCookie('csrftoken') },
+        success: function(res){
             createAppList(res)
         }
     })

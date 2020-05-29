@@ -3,13 +3,13 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.utils.encoding import force_bytes, force_text
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .forms import EditProfileForm
 from .models import Connections
 from .tokens import facebook_data, post_now
-import json
-from django.core import serializers
-from django.utils.encoding import force_bytes, force_text
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from ZetaShare.secrets import LINKEDIN_CLIENT_ID
+
 
 @login_required(login_url='main:home')
 def dashboard(request):
@@ -29,30 +29,33 @@ def user_profile(request):
     return render(request, 'zets/profile.html', {'form': form})
 
 
+@login_required(login_url='main:home')
 def connections(request):
     if request.method == 'POST':
         facebook_data(request)
         return JsonResponse({'msg': 'Connect App DOne'})
 
+    linkedin_connect = f'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={LINKEDIN_CLIENT_ID}&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fapp%2Flinkedin-oauth2%2Fcallback&state=oath-linkedin&scope=r_liteprofile,r_emailaddress,w_member_social'
     context = {
-        'facebook': Connections.objects.filter(social__user=request.user, social__provider='Facebook'),
-        'linkedin': Connections.objects.filter(social__user=request.user, social__provider='LinkedIn'),
-        'today': datetime.datetime.now()
+        'linkedin_connect': linkedin_connect
     }
     return render(request, 'zets/CreateApp.html', context)
 
 
+@login_required(login_url='main:home')
 def card(request):
     if request.method == 'POST':
         content = request.POST.get('post-content')
         post_now(request, msg=content)
     return render(request, 'zets/card.html')
 
-def appfetch(request):
+
+@login_required(login_url='main:home')
+def fetch_connect_app(request):
     data = []
 
     try:
-        fb_qs = Connections.objects.filter(social__user=request.user, social__provider='Facebook')    
+        fb_qs = Connections.objects.filter(social__user=request.user, social__provider='Facebook')
 
         for face in fb_qs:
             facebook = {
@@ -65,7 +68,6 @@ def appfetch(request):
 
     except Connections.DoesNotExist:
         pass
-
 
     try:
         link_qs = Connections.objects.filter(social__user=request.user, social__provider='LinkedIn')
@@ -82,14 +84,16 @@ def appfetch(request):
 
     except Connections.DoesNotExist:
         pass
-    
-    return JsonResponse({'data': data,'today':datetime.datetime.now().date()})
 
-def delete_app(request):
-    pid = request.GET.get('pid')
+    return JsonResponse({'data': data, 'today': datetime.datetime.now().date()})
+
+
+@login_required(login_url='main:home')
+def delete_connect_app(request):
+    pid = request.POST.get('pid')
     posting_id = force_text(urlsafe_base64_decode(pid))
-    qs = Connections.objects.get(posting_id=posting_id)
+    qs = Connections.objects.get(posting_id=posting_id, social__user=request.user)
     qs.delete()
 
-    data = appfetch(request)
+    data = fetch_connect_app(request)
     return data
