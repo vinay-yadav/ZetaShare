@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(function() {
     fetchAppList()
 })
 
@@ -21,20 +21,21 @@ function getCookie(name) {
 }
 
 // create app
-window.fbAsyncInit = function () {
+window.fbAsyncInit = function() {
     FB.init({
-        // appId: '243240056787926',
-        appId: '735133187228573',
+        appId: '243240056787926',
+        // appId: '735133187228573',
         cookie: true,
         xfbml: true,
         version: 'v6.0'
     });
 };
 
-(function (d, s, id) {
+(function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) { return; }
-    js = d.createElement(s); js.id = id;
+    js = d.createElement(s);
+    js.id = id;
     js.src = "https://connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
@@ -43,7 +44,7 @@ window.fbAsyncInit = function () {
 
 
 function CreateFacebookApp() {
-    FB.login(function (response) {
+    FB.login(function(response) {
         if (response.status === "connected") {
             isuserlogged(response)
         }
@@ -60,168 +61,209 @@ var userdata = {
 
 function isuserlogged(response) {
     userdata.AccessToken = response.authResponse.accessToken
-    FB.api('/me', { fields: 'name, email, gender, picture' }, function (response) {
+    FB.api('/me', { fields: 'name, email, gender, picture' }, function(response) {
         userdata.userId = response.id
         userdata.name = response.name
         userdata.email = response.email
         userdata.userImg = response.picture.data.url
-        
+
         $.ajax({
             method: 'post',
             url: '/app/connect-app/',
             data: userdata,
             headers: { "X-CSRFToken": getCookie('csrftoken') },
-            success: function (res) {
+            success: function(res) {
                 fetchAppList()
             }
         })
     })
 }
 
-function fetchAppList(){
+function fetchAppList() {
     $.ajax({
-        type:'get',
-        url:'/app/connected/fetch/',
-        async:false,
-        success:function(res){
-            createAppList(res)          
+        type: 'get',
+        url: '/app/connected/fetch/',
+        async: false,
+        success: function(res) {
+            createAppList(res)
         }
     })
 }
 
-function createAppList(res){
+function createAppList(res) {
     const ul = document.getElementById('setup-app')
-    ul.innerHTML=""
+    ul.innerHTML = ""
 
-    for(i in res.data){
-    const li = document.createElement('li')
-    li.setAttribute('class','app-list-item')
+    for (i in res.data) {
+        const li = document.createElement('li')
+        li.setAttribute('class', 'app-list-item')
 
-    const divappcontain = document.createElement('div')
-    divappcontain.setAttribute('class','app-mainconatiner d-flex my-3 p-3')
+        const divappcontain = document.createElement('div')
+        divappcontain.setAttribute('class', 'app-mainconatiner d-flex my-3 p-3')
 
-    const appIcon = document.createElement('div')
-    appIcon.setAttribute('class','app-icon')
+        const appIcon = document.createElement('div')
+        appIcon.setAttribute('class', 'app-icon')
 
-    const iconImg = document.createElement('img')
-    var iconattr = {
-        src:'',
-        alt:'',
-        width:'40px',
-        height:'40px'
-    }
-    if(res.data[i].provider ==='Facebook'){
-
-        iconattr.src = '/static/images/icons8-facebook-50.png/'
-        iconattr.alt = 'facebook-icon'
-        var disconnect = document.createElement('div')
-        disconnect.innerHTML = 'Disconnect'
-        disconnectattrs = {
-            'class':'btn btn-danger px-4 ',
-            'id':res.data[i].posting_id,
-            'onclick': 'disconnectApp(this)'
+        const iconImg = document.createElement('img')
+        var iconattr = {
+            src: '',
+            alt: '',
+            width: '40px',
+            height: '40px'
         }
-         keyloop(disconnect,disconnectattrs)
-    }
-    if(res.data[i].provider ==='LinkedIn'){
-        
-        iconattr.src = '/static/images/linkedin.png'
-        iconattr.alt = 'linkedin-icon'        
-        var reconnect = document.createElement('div')
-          reconnect.setAttribute('class','btn btn-primary px-4 ')
-          reconnect.innerHTML = 'Reconnect'
+        if (res.data[i].provider === 'Facebook') {
 
-
-        var disconnect = document.createElement('div')
-        disconnectattrs = {
-            'class':'btn btn-danger px-4 ml-3',
-            'id':res.data[i].posting_id,
-            'onclick': 'disconnectApp(this)'
+            iconattr.src = '/static/images/icons8-facebook-50.png/'
+            iconattr.alt = 'facebook-icon'
+            var disconnect = document.createElement('div')
+            disconnect.innerHTML = 'Disconnect'
+            disconnectattrs = {
+                'class': 'btn btn-danger px-4 ',
+                'id': res.data[i].posting_id,
+                'onclick': 'disconnectApp(this)'
+            }
+            keyloop(disconnect, disconnectattrs)
         }
-         keyloop(disconnect,disconnectattrs)
-          disconnect.innerHTML = 'Disconnect'
-    }
-    keyloop(iconImg,iconattr)
-    const appInfo = document.createElement('div')
-    let infoattr = {
-        'class':'app-info px-4',
-        'style':'flex:1'
-    }
-    
+        if (res.data[i].provider === 'LinkedIn') {
 
-    keyloop(appInfo,infoattr)
-    const buttonAcc = document.createElement('div')
-    let buttonattr = {
-        'class':'button-acc w-100 d-flex',
-        'style':'align-item:conter'
-    }
-    keyloop(buttonAcc,buttonattr)
-    
-    const icon = document.createElement('i')
-    icon.setAttribute('class','bx bx-pencil')
-    const accNameDiv = document.createElement('div')
-    accNameDiv.setAttribute('class','acc-name pl-1')
-    const accName = document.createElement('input')
-    let nameattr = {
-        'class':'account-name',
-        'type':'text',
-        'placeholder':'Account Name',
-        'value':res.data[i].page_name
-    }
+            iconattr.src = '/static/images/linkedin.png'
+            iconattr.alt = 'linkedin-icon'
+            var reconnect = document.createElement('div')
+            reconnectattrs = {
+                class: 'btn btn-primary px-4',
+                type: 'button',
 
-    keyloop(accName,nameattr)
-      const divider = document.createElement('div')
-      divider.setAttribute('class','divider')
+            }
+            const tokenDate = new Date(res.data[i].token_expiration)
+            const todayDate = new Date(res.today)
+            if (tokenDate.getTime() >= todayDate.getTime()) {
+                reconnectattrs.class = 'btn btn-primary px-4 disabled'
+            }
+            keyloop(reconnect, reconnectattrs)
+            reconnect.innerHTML = 'Reconnect'
 
-      const span = document.createElement('span')
-      span.setAttribute('class','app-createdAt')
-      const date = new Date(res.data[i].added_on)
-      date.toDateString()
-      span.innerHTML = date
 
-      const appbutton = document.createElement('div')
-      appbutton.setAttribute('class','app-button mx-5')
+            var disconnect = document.createElement('div')
+            disconnectattrs = {
+                'class': 'btn btn-danger px-4 ml-3',
+                'id': res.data[i].posting_id,
+                'onclick': 'disconnectApp(this)'
+            }
+            keyloop(disconnect, disconnectattrs)
+            disconnect.innerHTML = 'Disconnect'
+        }
+        keyloop(iconImg, iconattr)
+        const appInfo = document.createElement('div')
+        let infoattr = {
+            'class': 'app-info px-4',
+            'style': 'flex:1'
+        }
 
-      li.appendChild(divappcontain)
-      divappcontain.appendChild(appIcon)
-      divappcontain.appendChild(appInfo)
-      divappcontain.appendChild(appbutton)
-      if(res.data[i].provider === 'Facebook'){
-        appbutton.appendChild(disconnect)
-      }
-      if(res.data[i].provider === 'LinkedIn'){
-        appbutton.appendChild(reconnect)
-        appbutton.appendChild(disconnect)
-      }
-      
-      appIcon.appendChild(iconImg)
-      appInfo.appendChild(buttonAcc)
-      appInfo.appendChild(divider)
-      appInfo.appendChild(span)
-      buttonAcc.appendChild(icon)
-      buttonAcc.appendChild(accNameDiv)
-      accNameDiv.appendChild(accName)
-      ul.appendChild(li)
+
+        keyloop(appInfo, infoattr)
+        const buttonAcc = document.createElement('div')
+        let buttonattr = {
+            'class': 'button-acc w-100 d-flex',
+            'style': 'align-item:conter'
+        }
+        keyloop(buttonAcc, buttonattr)
+
+        const icon = document.createElement('i')
+        icon.setAttribute('class', 'bx bx-pencil')
+        const accNameDiv = document.createElement('div')
+        accNameDiv.setAttribute('class', 'acc-name pl-1')
+        const accName = document.createElement('input')
+        let nameattr = {
+            'class': 'account-name',
+            'id': res.data[i].posting_id,
+            'type': 'text',
+            'placeholder': 'Account Name',
+            'onchange':'editpagename(this)',
+            'value': ''
+        }
+        if(res.data[i].page_name!== null){
+            nameattr.value = res.data[i].page_name
+        }
+        keyloop(accName, nameattr)
+        const divider = document.createElement('div')
+        divider.setAttribute('class', 'divider')
+
+        const span = document.createElement('span')
+        span.setAttribute('class', 'app-createdAt')
+        const date = new Date(res.data[i].added_on)
+        date.toDateString()
+        span.innerHTML = date
+
+        const appbutton = document.createElement('div')
+        appbutton.setAttribute('class', 'app-button mx-5')
+
+        li.appendChild(divappcontain)
+        divappcontain.appendChild(appIcon)
+        divappcontain.appendChild(appInfo)
+        divappcontain.appendChild(appbutton)
+        if (res.data[i].provider === 'Facebook') {
+            appbutton.appendChild(disconnect)
+        }
+        if (res.data[i].provider === 'LinkedIn') {
+            appbutton.appendChild(reconnect)
+            appbutton.appendChild(disconnect)
+        }
+
+        appIcon.appendChild(iconImg)
+        appInfo.appendChild(buttonAcc)
+        appInfo.appendChild(divider)
+        appInfo.appendChild(span)
+        buttonAcc.appendChild(icon)
+        buttonAcc.appendChild(accNameDiv)
+        accNameDiv.appendChild(accName)
+        ul.appendChild(li)
     }
 }
 
 
-function keyloop(element,attrs){
-    for(let i in attrs){
+function keyloop(element, attrs) {
+    for (let i in attrs) {
         element.setAttribute(i, attrs[i])
     }
 }
 
 // function for disconnect app
 
-function disconnectApp(ref){
+function disconnectApp(ref) {
     $.ajax({
         type: 'post',
         url: '/app/connected/delete/',
-        data: {pid: ref.getAttribute('id')},
+        data: { pid: ref.getAttribute('id') },
         headers: { "X-CSRFToken": getCookie('csrftoken') },
-        success: function(res){
+        success: function(res) {
             createAppList(res)
+        }
+    })
+}
+
+//ajax for page name change
+
+function editpagename(data) {
+    $.ajax({
+        type:'post',
+        url:'',
+        data:{
+                pid:data.id,
+                page_name:data.value
+                },
+    })
+}
+
+// linkedin auth
+
+function linkedInAuth(){
+    $.ajax({
+        type:'get',
+        contentType: "application/json",    
+        dataType:'jsonp',
+        url:'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=864p2i6fecc0u6&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fapp%2Flinkedin-oauth2%2Fcallback&state=oath-linkedin&scope=r_liteprofile,r_emailaddress,w_member_social',
+        success:function(res){
+            console.log(res)
         }
     })
 }
