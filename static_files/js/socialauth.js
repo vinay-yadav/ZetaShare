@@ -17,10 +17,10 @@ function getCookie(name) {
 
 // facebook login
 
-window.fbAsyncInit = function () {
+window.fbAsyncInit = function() {
     FB.init({
-        // appId: '243240056787926',
-        appId: '735133187228573',
+        appId: '243240056787926',
+        // appId: '735133187228573',
         cookie: true,
         xfbml: true,
         version: 'v6.0'
@@ -29,17 +29,18 @@ window.fbAsyncInit = function () {
 
 
 // Load the SDK asynchronously
-(function (d, s, id) {
+(function(d, s, id) {
     var js, fjs = d.getElementsByTagName(s)[0];
     if (d.getElementById(id)) return;
-    js = d.createElement(s); js.id = id;
+    js = d.createElement(s);
+    js.id = id;
     js.src = "https://connect.facebook.net/en_US/sdk.js";
     fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));
 
 
 function checkLoginState() {
-    FB.getLoginStatus(function (response) {
+    FB.getLoginStatus(function(response) {
         statusChangeCallback(response);
     });
 }
@@ -54,7 +55,7 @@ function statusChangeCallback(response) {
 
 function fetchdata() {
     console.log('Welcome!  Fetching your information.... ');
-    FB.api('/me', { fields: 'name, email, id, picture' }, function (response) {
+    FB.api('/me', { fields: 'name, email, id, picture' }, function(response) {
         console.log(response)
         let user_data = {
             userId: response.id,
@@ -69,7 +70,7 @@ function fetchdata() {
             url: "/social-auth/",
             data: user_data,
             headers: { "X-CSRFToken": getCookie('csrftoken') },
-            success: function (res) {
+            success: function(res) {
                 window.location.replace(res.url)
             }
         })
@@ -87,7 +88,7 @@ function onSignIn(googleUser) {
         userEmail: profile.getEmail(),
         userImg: profile.getImageUrl(),
         provider: 'Google'
-        // accessToken: googleUser.getAuthResponse().access_token
+            // accessToken: googleUser.getAuthResponse().access_token
     }
 
     $.ajax({
@@ -95,7 +96,7 @@ function onSignIn(googleUser) {
         url: '/social-auth/',
         data: user_data,
         headers: { "X-CSRFToken": getCookie('csrftoken') },
-        success: function (res) {
+        success: function(res) {
             console.log('google')
             gLogout()
             window.location.replace(res.url)
@@ -121,9 +122,10 @@ function renderButton() {
 
     });
 }
+
 function gLogout() {
     var auth2 = gapi.auth2.getAuthInstance();
-    auth2.signOut().then(function () {
+    auth2.signOut().then(function() {
         console.log('User signed out.');
         console.log('logout successfully')
         $('#user-info').css('display', 'none')
@@ -131,9 +133,3 @@ function gLogout() {
         location.reload()
     });
 }
-
-
-
-
-
-
