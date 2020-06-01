@@ -30,3 +30,28 @@ function social_selected(ref) {
         ref.lastElementChild.remove()
     }
 }
+
+
+$('#random-schedule').click(function(event){
+    event.stopPropagation();
+    $( "div.random-schedule-dropdown-menu" ).toggle() 
+    $("div.single-schedule-dropdown-menu").hide() 
+})
+
+$('#single-schedule').click(function(event){
+    event.stopPropagation();
+    $("div.single-schedule-dropdown-menu").toggle()
+    $("div.random-schedule-dropdown-menu").hide()    
+})
+
+
+
+function scheduletimedate(ref){
+   
+    if(ref.checked == true){
+        $(ref).next().show({direction:'up'})
+    }else{
+       $(ref).next().hide({direction:'up'})
+    }
+   
+}
