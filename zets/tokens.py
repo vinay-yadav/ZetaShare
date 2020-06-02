@@ -12,11 +12,16 @@ def facebook_data(request):
     picture = request.POST.get('userImg')
     access_token = request.POST.get('AccessToken')
 
-    permanent_link = f"https://graph.facebook.com/v6.0/oauth/access_token?grant_type=fb_exchange_token&client_id={FACEBOOK_CLIENT_ID}&client_secret={FACEBOOK_SECRET_KEY}&fb_exchange_token={access_token}"
-    permanent = requests.get(permanent_link).json()
+    permanent = requests.get("https://graph.facebook.com/v6.0/oauth/access_token",
+                             params={
+                                'grant_type': 'fb_exchange_token',
+                                'client_id': FACEBOOK_CLIENT_ID,
+                                'client_secret': FACEBOOK_SECRET_KEY,
+                                'fb_exchange_token': access_token
+                                }).json()
 
-    page_token_link = f"https://graph.facebook.com/{facebook_id}/accounts?access_token={permanent['access_token']}"
-    page_token = requests.get(page_token_link).json()
+    page_token_link = f"https://graph.facebook.com/{facebook_id}/accounts"
+    page_token = requests.get(page_token_link, params={'access_token': permanent['access_token']}).json()
 
     try:
         social = SocialMedia.objects.get(user=request.user, provider='Facebook')
@@ -53,10 +58,14 @@ def linkedin_data(request):
     code = request.GET.get('code')
     redirect_uri = 'https%3A%2F%2Flocalhost%3A8000%2Fapp%2Flinkedin-oauth2%2Fcallback'
     url = f'https://www.linkedin.com/oauth/v2/accessToken?grant_type=authorization_code&code={code}&redirect_uri={redirect_uri}&client_id={LINKEDIN_CLIENT_ID}&client_secret={LINKEDIN_SECRET_KEY}'
+
     access_token = requests.post(url).json()
 
-    user_data = requests.get('https://api.linkedin.com/v2/me', headers={'Connection': 'Keep-Alive',
-                                                                        'Authorization': f'Bearer {access_token["access_token"]}'}).json()
+    user_data = requests.get('https://api.linkedin.com/v2/me',
+                             headers={
+                                 'Connection': 'Keep-Alive',
+                                 'Authorization': f'Bearer {access_token["access_token"]}'
+                             }).json()
 
     try:
         social = SocialMedia.objects.get(user=request.user, provider='LinkedIn')

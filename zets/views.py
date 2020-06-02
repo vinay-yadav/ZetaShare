@@ -35,11 +35,7 @@ def connections(request):
         facebook_data(request)
         return JsonResponse({'msg': 'Connect App DOne'})
 
-    linkedin_connect = f'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={LINKEDIN_CLIENT_ID}&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fapp%2Flinkedin-oauth2%2Fcallback&state=oath-linkedin&scope=r_liteprofile,r_emailaddress,w_member_social'
-    context = {
-        'linkedin_connect': linkedin_connect
-    }
-    return render(request, 'zets/CreateApp.html', context)
+    return render(request, 'zets/CreateApp.html')
 
 
 @login_required(login_url='main:home')
@@ -90,10 +86,19 @@ def fetch_connect_app(request):
 
 @login_required(login_url='main:home')
 def delete_connect_app(request):
-    pid = request.POST.get('pid')
-    posting_id = force_text(urlsafe_base64_decode(pid))
+    posting_id = force_text(urlsafe_base64_decode(request.POST.get('pid')))
     qs = Connections.objects.get(posting_id=posting_id, social__user=request.user)
     qs.delete()
 
     data = fetch_connect_app(request)
     return data
+
+
+@login_required(login_url='main:home')
+def custom_page_name(request):
+    page_name = request.POST.get('page_name'),
+    pid = force_text(urlsafe_base64_decode(request.POST.get('pid')))
+    qs = Connections.objects.get(social__user=request.user, posting_id=pid)
+    qs.page_name = page_name[0]
+    qs.save()
+    return JsonResponse({'msg': 'Complete'}, status=201)

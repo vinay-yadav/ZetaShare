@@ -17,6 +17,30 @@
     <!-- social authentication -->
     <script src="{% static 'js/socialauth.js' %}"></script>
     <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+    <style>
+        @keyframes message {
+            0% {
+                top: 10px;
+            }
+            75% {
+                top: 75px;
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                top: 75px;
+            }
+        }
+        .messages {
+            animation-name: message;
+            animation-duration: 5s;
+            top: 75px;
+            z-index: 1;
+            position: fixed;
+            right: 108px;
+        }
+
+    </style>
 </head>
 
 <body>
@@ -59,7 +83,7 @@
         {% if messages %}
         <ul class="messages">
             {% for message in messages %}
-            <div class="alert alert-{{ message.tags }}" style="width: 98%">
+            <div class="alert alert-{{ message.tags }}">
                 {{ message }}
             </div>
             {% endfor %}
@@ -168,6 +192,14 @@
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
     <script src="{% static 'js/frontliner.js' %}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const element = document.querySelector('.messages')
+            if (element){
+                setInterval(() => {element.remove();}, 5000)
+            }
+        })
+    </script>
 
 </body>
 
