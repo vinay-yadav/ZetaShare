@@ -23,24 +23,114 @@
             <div class="card-body p-3">
                 <textarea name="post-content" id="post-content" rows="5"
                     placeholder="Write your post caption..."></textarea>
+            </div>
+            <div class="schedule-button">
 
-                <h6 class="card-title text-muted">Also Share On</h6>
-                <div class="social-icon float-sm-right">
-                    <button class="btn btn-default" type="button" onclick="social_selected(this)">
-                        <i class='bx bxl-facebook-circle' style='color:#ae9033;font-size: 26px;'></i>
-                    </button>
-                    <button class="btn btn-default" type="button" onclick="social_selected(this)">
-                        <i class='bx bxl-instagram' style='color:#ae9033;font-size: 26px;'></i>
-                    </button>
-                    <button class="btn btn-default" type="button" onclick="social_selected(this)">
-                        <i class='bx bxl-twitter' style='color:#ae9033;font-size: 26px;'></i>
-                    </button>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary sbutton dropdown-toggle" id="random-schedule"> Random Schedule </button>
+                            <div class="random-schedule-dropdown-menu">
+                                <div class="drop-item">
+                                    <label for="fbSchedule">Facebook</label>
+                                    <input type="checkbox" name="schedule-fb" class="app-checkbox" id="fbSchedule" onclick="scheduletimedate(this)" >
+                                    <div class="schdule-event">
+                                        <div class="dropdown-divider"></div>
+                                        <label for="fbSchedule-date"class="event-title">Date</label>
+                                        <br>
+                                        <input type="date" name="fbSchedule-date" id="fbSchedule-date">
+                                        <br>
+                                        <label for="fbSchedule-time" class="event-title mt-2">Time</label>
+                                        <br>
+                                        <input type="time" name="fbSchedule-time" id="fbSchedule-time">
+                                    </div>
+                                </div>
+
+                                <div class="dropdown-divider"></div>
+
+                                <div class="drop-item">
+                                    <label for="lnSchedule">LinkedIn</label>
+                                    <input type="checkbox" name="schedule-ln" class="app-checkbox" id="lnSchedule" onclick="scheduletimedate(this)"> 
+                                    <div class="schdule-event">
+                                        <div class="dropdown-divider"></div>
+                                        <label for="fbSchedule-date"class="event-title">Date</label>
+                                        <br>
+                                        <input type="date" name="fbSchedule-date" id="fbSchedule-date">
+                                        <br>
+                                        <label for="fbSchedule-time" class="event-title mt-2">Time</label>
+                                        <br>
+                                        <input type="time" name="fbSchedule-time" id="fbSchedule-time">
+                                    </div>
+                                </div>
+                                
+                                <div class="dropdown-divider"></div>
+
+                                <div class="drop-item">
+                                    <label for="instaSchedule">Instagram</label>
+                                    <input type="checkbox" name="schedule-insta" class="app-checkbox" id="instaSchedule" onclick="scheduletimedate(this)">
+                                    <div class="schdule-event">
+                                        <div class="dropdown-divider"></div>
+                                        <label for="fbSchedule-date"class="event-title">Date</label>
+                                        <br>
+                                        <input type="date" name="fbSchedule-date" id="fbSchedule-date">
+                                        <br>
+                                        <label for="fbSchedule-time" class="event-title mt-2">Time</label>
+                                        <br>
+                                        <input type="time" name="fbSchedule-time" id="fbSchedule-time">
+                                    </div>
+                                </div>
+
+                                <div class="dropdown-divider"></div>
+                                <div class="drop-item">
+                                    <button class="btn btn-success">Post</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-danger sbutton dropdown-toggle" id="single-schedule"> Single Schedule                            </button>
+                            <div class="single-schedule-dropdown-menu">
+                                <div class="schdule-event drop-item">
+                                    <div class="dropdown-divider"></div>
+                                    <label for="fbSchedule-date"class="event-title">Date</label>
+                                    <br>
+                                    <input type="date" name="fbSchedule-date" id="fbSchedule-date">
+                                    <br>
+                                    <label for="fbSchedule-time" class="event-title mt-2">Time</label>
+                                    <br>
+                                    <input type="time" name="fbSchedule-time" id="fbSchedule-time">
+                                </div>
+
+                                <div class="dropdown-divider"></div>
+
+                                <div class="drop-item">
+                                    <label for="fbSchedule">Facebook</label>
+                                    <input type="checkbox" name="schedule-fb" class="app-checkbox" id="fbSchedule" onclick="scheduletimedate(this)" >
+                                </div>
+
+                                <div class="drop-item">
+                                    <label for="lnSchedule">LinkedIn</label>
+                                    <input type="checkbox" name="schedule-ln" class="app-checkbox" id="lnSchedule" onclick="scheduletimedate(this)"> 
+                                </div>
+
+                                <div class="drop-item">
+                                    <label for="instaSchedule">Instagram</label>
+                                    <input type="checkbox" name="schedule-insta" class="app-checkbox" id="instaSchedule" onclick="scheduletimedate(this)">
+                                </div>
+                                <div class="drop-item">
+                                    <button class="btn btn-success">Post</button>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
             </div>
-            <button type="submit" class="btn btn-primary">
-                POST NOW
-            </button>
         </div>
     </form>
 </div>
