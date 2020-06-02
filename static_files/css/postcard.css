@@ -48,3 +48,48 @@
     position: absolute;
     margin: -3px -10px;
 }
+
+/* scheduling button */
+
+.sbutton{
+    width: max-content;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.random-schedule-dropdown-menu,.single-schedule-dropdown-menu{
+    display: none;
+    position: absolute;
+    background: white; 
+    left: 0;
+    width: 235px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    transform: translate3d(0px, 42px, 0px);
+    padding: 0.5rem 0;
+}
+
+.drop-item{
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1.5rem;
+    clear: both;
+    font-weight: 400;
+    color: #212529;
+    text-align: inherit;
+    white-space: nowrap;
+    background-color: transparent;
+    border: 0;
+}
+.app-checkbox {
+    position: absolute;
+    right: 30px;
+    margin: 6px 0;
+}
+.event-title{
+    color: #717171f2;
+    font-weight: 500;
+}
+.random-schedule-dropdown-menu .schdule-event{
+    display: none;
+}
