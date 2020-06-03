@@ -1,57 +1,34 @@
-$('#post').change(function () {
-    imagePreview(this)
-})
-function imagePreview(file) {
-    if (file.files && file.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            document.getElementById('image_preview').setAttribute('src', e.target.result)
+
+$(document).ready(function(){
+
+    $.ajax({
+        type: 'get',
+        url: '/app/connected/fetch/',
+        async: false,
+        success: function(res) {
+            for(let i=0;i<res.data.length;i++){
+                if(res.data[i].provider==='Facebook'){
+                    
+                    $('.fbpages').append(`<div class="page">
+                    <label for="${res.data[i].posting_id}" style="font-weight: 700;width:100px;overflow:hidden; font-family: sans-serif;font-size: 12px;letter-spacing: 0.4px;">${res.data[i].page_name}</label>
+                    <input class="ml-4" type="checkbox" name="postingId" id="${res.data[i].posting_id}" value="${res.data[i].posting_id}" style="float:right">
+                </div> `)
+                }
+                if(res.data[i].provider ==='LinkedIn'){
+                    $('.lnpages').append(`<div class="page">
+                    <label for="${res.data[i].posting_id}" style="font-weight: 700;width:100px;overflow:hidden; font-family: sans-serif;font-size: 12px;letter-spacing: 0.4px;">${res.data[i].page_name}</label>
+                    <input class="ml-4" type="checkbox" name="postingId" id="${res.data[i].posting_id}" value="${res.data[i].posting_id}" style="float:right">
+                </div> `)
+                }
+            }
         }
-
-        reader.readAsDataURL(file.files[0]); // convert to base64 string
-
-
-    }
-}
-
-function social_selected(ref) {
-    console.log(ref.firstElementChild.style.color)
-    if (ref.firstElementChild.style.color !== "rgb(222, 221, 219)") {
-        ref.firstElementChild.style.color = "#dedddb"
-        const ele = document.createElement('i')
-        ele.setAttribute('class', 'bx bx-check')
-        ele.setAttribute('id', 'checked')
-        ref.appendChild(ele)
-        console.log('if block')
-    }
-    else {
-        console.log('else block')
-        ref.firstElementChild.style.color = "#ae9033"
-        ref.lastElementChild.remove()
-    }
-}
-
-
-$('#random-schedule').click(function(event){
-    event.stopPropagation();
-    $( "div.random-schedule-dropdown-menu" ).toggle() 
-    $("div.single-schedule-dropdown-menu").hide() 
+    })
 })
 
-$('#single-schedule').click(function(event){
-    event.stopPropagation();
-    $("div.single-schedule-dropdown-menu").toggle()
-    $("div.random-schedule-dropdown-menu").hide()    
-})
-
-
-
-function scheduletimedate(ref){
-   
-    if(ref.checked == true){
-        $(ref).next().show({direction:'up'})
-    }else{
-       $(ref).next().hide({direction:'up'})
+function pagedropdown(data){
+    event.stopPropagation()
+    if(!$(data).next().hasClass('show')){
+        $('.pages-dropdown').removeClass('show')
     }
-   
+    $(data).next().toggleClass('show')
 }
