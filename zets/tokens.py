@@ -1,4 +1,5 @@
 import requests
+import threading
 from django.shortcuts import HttpResponse, redirect
 from django.utils import timezone
 from ZetaShare.secrets import FACEBOOK_CLIENT_ID, FACEBOOK_SECRET_KEY, LINKEDIN_CLIENT_ID, LINKEDIN_SECRET_KEY
@@ -96,39 +97,78 @@ def linkedin_data(request):
     return HttpResponse('<script type="text/javascript">window.close()</script>')
 
 
-def post_now(request):
-    caption = request.POST.get('post-content')
+def post_facebook(request, facebook):
+    caption = request.POST.get('caption')
+    image = 'http://www.realtyredefine.com/media/interior/RR_124866_2020-04-25_113159.016084.jpeg'
+    # image = None
+
+    params = {'message': caption}
+
+    for face in facebook:
+        obj = Connections.objects.get(social__user=request.user, posting_id=face)
+
+        if image:
+            params.update({'url': image})
+            url = f'https://graph.facebook.com/{obj.posting_id}/photos'
+        else:
+            url = f'https://graph.facebook.com/{obj.posting_id}/feed'
+
+        params.update({'access_token': obj.access_token})
+
+        action = requests.post(url, params=params)
+        print(action.json())
+
+        if action.status_code == 200:
+            print('Post Complete', sep='\n')
+
+
+def post_linkedin(request, linkedin):
+    caption = request.POST.get('caption')
     image = 'http://www.realtyredefine.com/media/interior/RR_124866_2020-04-25_113159.016084.jpeg'
 
-    posting_id = '113588353690743'
-    access_token = 'EAAKcmYh8w50BANzjegi4RA0BdXTqSWWR1aQEZCBZCZAKowQ3l2bOg0m6wJyfEhDoI90ushUQNqlVpCZARyFeiY3WOpZBjeXbCBTGMTiJEQLyRcXmZB6XA9CzMAi8CpWVhAVrkSmq0jcZA981BZBhwz40cPQTq9ZAaubxZAZC5pPSjwB6wZDZD'
+    json = {
+        "author": "",
+        "lifecycleState": "PUBLISHED",
+        "specificContent": {
+            "com.linkedin.ugc.ShareContent": {
+                "shareCommentary": {
+                    "text": ""
+                },
+                "shareMediaCategory": "NONE"
+            }
+        },
+        "visibility": {
+            "com.linkedin.ugc.MemberNetworkVisibility": "CONNECTIONS"
+        }
+    }
 
-    params = {'message': caption, 'url': image, 'access_token': access_token}
-    action = requests.post(f'https://graph.facebook.com/{posting_id}/photos', params=params).json()
-    print(action)
+    for link in linkedin:
+        obj = Connections.objects.get(social__user=request.user, posting_id=link)
 
-    # headers = {
-    #     "X-Restli-Protocol-Version": "2.0.0",
-    #     "Authorization": "Bearer AQVBAR2uFb6TJ-ySI2jnAQjq2fYJNJglGL2jl9PkfbPrMDrXnyJmzknp84vvwngSLENog9dTXHN8bMlB_FjOdwLyTWLZGTkbvTZh9G3bq5Lm4zzGymI-u91gbnT4NruDF5y4GXzhqhPeVxwEwaNOHecolywxzTHVHyfSHvvtzs5Z3NxFj5hGlHib8I6CzwGOuHIgeDJajZgoL7IsSQJKP9WztgwPqmMkxAy42BY7X67mZNDEWfs1oepuZgszPPPIjHP5yGGHALrHCY2C5WBYhtuITTm5kfPylewCdQeve71Q0-oB6GqlFDqnlKktGQtANUb4kw9_fj-eiBmfMfNy-40gWZciWg"
-    # }
-    #
-    # json = {
-    #     "author": "urn:li:person:VVyyZKmxJj",
-    #     "lifecycleState": "PUBLISHED",
-    #     "specificContent": {
-    #         "com.linkedin.ugc.ShareContent": {
-    #             "shareCommentary": {
-    #                 "text": "API TEST"
-    #             },
-    #             "shareMediaCategory": "NONE"
-    #         }
-    #     },
-    #     "visibility": {
-    #         "com.linkedin.ugc.MemberNetworkVisibility": "CONNECTIONS"
-    #     }
-    # }
-    #
-    # action = requests.post("https://api.linkedin.com/v2/ugcPosts", json=json, headers=headers).json()
-    # print(action)
-    return redirect('zets:dashboard')
+        headers = {
+            "X-Restli-Protocol-Version": "2.0.0",
+            "Authorization": f"Bearer {obj.access_token}"
+        }
 
+        json['author'] = f'urn:li:person:{link}'
+        json['specificContent']['com.linkedin.ugc.ShareContent']['shareCommentary']['text'] = caption
+
+        action = requests.post("https://api.linkedin.com/v2/ugcPosts", json=json, headers=headers)
+        print(action.status_code, action.json(), sep='\n')
+
+
+def post_now(request):
+    facebook = ['113588353690743', '183778999152444']
+    linkedin = ['VVyyZKmxJj']
+
+    if facebook:
+        # posting on Facebook
+        fb_post = threading.Thread(target=post_facebook, args=[request, facebook])
+        fb_post.start()
+
+    if linkedin:
+        # posting on LinkedIn
+        linkedin_post = threading.Thread(target=post_linkedin, args=[request, linkedin])
+        linkedin_post.start()
+
+    print('Posted')

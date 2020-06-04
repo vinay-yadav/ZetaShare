@@ -8,7 +8,6 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .forms import EditProfileForm
 from .models import Connections
 from .tokens import facebook_data, post_now
-from ZetaShare.secrets import LINKEDIN_CLIENT_ID
 
 
 @login_required(login_url='main:home')
