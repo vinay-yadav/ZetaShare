@@ -96,36 +96,39 @@ def linkedin_data(request):
     return HttpResponse('<script type="text/javascript">window.close()</script>')
 
 
-def post_now(request, msg):
-    # obj = Facebook.objects.filter(user=request.user)
-    #
-    # photo = 'http://www.realtyredefine.com/media/interior/RR_124866_2020-04-25_113159.016084.jpeg'
-    # link = f'https://graph.facebook.com/{obj.page_id}/photos?message={msg}&url={photo}&access_token={obj.page_access_token}'
-    # action = requests.post(link).json()
-    # print(action)
+def post_now(request):
+    caption = request.POST.get('post-content')
+    image = 'http://www.realtyredefine.com/media/interior/RR_124866_2020-04-25_113159.016084.jpeg'
 
-    headers = {
-        "X-Restli-Protocol-Version": "2.0.0",
-        "Authorization": "Bearer AQVBAR2uFb6TJ-ySI2jnAQjq2fYJNJglGL2jl9PkfbPrMDrXnyJmzknp84vvwngSLENog9dTXHN8bMlB_FjOdwLyTWLZGTkbvTZh9G3bq5Lm4zzGymI-u91gbnT4NruDF5y4GXzhqhPeVxwEwaNOHecolywxzTHVHyfSHvvtzs5Z3NxFj5hGlHib8I6CzwGOuHIgeDJajZgoL7IsSQJKP9WztgwPqmMkxAy42BY7X67mZNDEWfs1oepuZgszPPPIjHP5yGGHALrHCY2C5WBYhtuITTm5kfPylewCdQeve71Q0-oB6GqlFDqnlKktGQtANUb4kw9_fj-eiBmfMfNy-40gWZciWg"
-    }
+    posting_id = '113588353690743'
+    access_token = 'EAAKcmYh8w50BANzjegi4RA0BdXTqSWWR1aQEZCBZCZAKowQ3l2bOg0m6wJyfEhDoI90ushUQNqlVpCZARyFeiY3WOpZBjeXbCBTGMTiJEQLyRcXmZB6XA9CzMAi8CpWVhAVrkSmq0jcZA981BZBhwz40cPQTq9ZAaubxZAZC5pPSjwB6wZDZD'
 
-    json = {
-        "author": "urn:li:person:VVyyZKmxJj",
-        "lifecycleState": "PUBLISHED",
-        "specificContent": {
-            "com.linkedin.ugc.ShareContent": {
-                "shareCommentary": {
-                    "text": "API TEST"
-                },
-                "shareMediaCategory": "NONE"
-            }
-        },
-        "visibility": {
-            "com.linkedin.ugc.MemberNetworkVisibility": "CONNECTIONS"
-        }
-    }
-
-    action = requests.post("https://api.linkedin.com/v2/ugcPosts", json=json, headers=headers).json()
+    params = {'message': caption, 'url': image, 'access_token': access_token}
+    action = requests.post(f'https://graph.facebook.com/{posting_id}/photos', params=params).json()
     print(action)
+
+    # headers = {
+    #     "X-Restli-Protocol-Version": "2.0.0",
+    #     "Authorization": "Bearer AQVBAR2uFb6TJ-ySI2jnAQjq2fYJNJglGL2jl9PkfbPrMDrXnyJmzknp84vvwngSLENog9dTXHN8bMlB_FjOdwLyTWLZGTkbvTZh9G3bq5Lm4zzGymI-u91gbnT4NruDF5y4GXzhqhPeVxwEwaNOHecolywxzTHVHyfSHvvtzs5Z3NxFj5hGlHib8I6CzwGOuHIgeDJajZgoL7IsSQJKP9WztgwPqmMkxAy42BY7X67mZNDEWfs1oepuZgszPPPIjHP5yGGHALrHCY2C5WBYhtuITTm5kfPylewCdQeve71Q0-oB6GqlFDqnlKktGQtANUb4kw9_fj-eiBmfMfNy-40gWZciWg"
+    # }
+    #
+    # json = {
+    #     "author": "urn:li:person:VVyyZKmxJj",
+    #     "lifecycleState": "PUBLISHED",
+    #     "specificContent": {
+    #         "com.linkedin.ugc.ShareContent": {
+    #             "shareCommentary": {
+    #                 "text": "API TEST"
+    #             },
+    #             "shareMediaCategory": "NONE"
+    #         }
+    #     },
+    #     "visibility": {
+    #         "com.linkedin.ugc.MemberNetworkVisibility": "CONNECTIONS"
+    #     }
+    # }
+    #
+    # action = requests.post("https://api.linkedin.com/v2/ugcPosts", json=json, headers=headers).json()
+    # print(action)
     return redirect('zets:dashboard')
 

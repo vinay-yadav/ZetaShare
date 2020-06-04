@@ -41,8 +41,8 @@ def connections(request):
 @login_required(login_url='main:home')
 def card(request):
     if request.method == 'POST':
-        content = request.POST.get('post-content')
-        post_now(request, msg=content)
+        post_now(request)
+
     return render(request, 'zets/card.html')
 
 
