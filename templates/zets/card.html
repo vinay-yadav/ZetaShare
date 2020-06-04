@@ -9,130 +9,194 @@
 
 {% block content %}
 <div class="wrapper">
-    <form method="post" action="" id="post-form">
         {%  csrf_token %}
-        <div class="card my-5" style="width: 18.5em;">
-            <img src="" id="image_preview" alt="">
-
-            <div class="button_upload" type="button">
-                <input type="file" name="postimage" id="post" style="display: none;">
-                <label for="post" role="button" class="my-0" onload="imagePreview()"> <i
-                        class='bx bx-upload'></i></label>
-            </div>
-            <hr class="my-0">
-            <div class="card-body p-3">
-                <textarea name="post-content" id="post-content" rows="5"
-                    placeholder="Write your post caption..."></textarea>
-            </div>
-            <div class="schedule-button">
-
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-primary sbutton dropdown-toggle" id="random-schedule"> Random Schedule </button>
-                            <div class="random-schedule-dropdown-menu">
-                                <div class="drop-item">
-                                    <label for="fbSchedule">Facebook</label>
-                                    <input type="checkbox" name="schedule-fb" class="app-checkbox" id="fbSchedule" onclick="scheduletimedate(this)" >
-                                    <div class="schdule-event">
-                                        <div class="dropdown-divider"></div>
-                                        <label for="fbSchedule-date"class="event-title">Date</label>
-                                        <br>
-                                        <input type="date" name="fbSchedule-date" id="fbSchedule-date">
-                                        <br>
-                                        <label for="fbSchedule-time" class="event-title mt-2">Time</label>
-                                        <br>
-                                        <input type="time" name="fbSchedule-time" id="fbSchedule-time">
-                                    </div>
-                                </div>
-
-                                <div class="dropdown-divider"></div>
-
-                                <div class="drop-item">
-                                    <label for="lnSchedule">LinkedIn</label>
-                                    <input type="checkbox" name="schedule-ln" class="app-checkbox" id="lnSchedule" onclick="scheduletimedate(this)"> 
-                                    <div class="schdule-event">
-                                        <div class="dropdown-divider"></div>
-                                        <label for="fbSchedule-date"class="event-title">Date</label>
-                                        <br>
-                                        <input type="date" name="fbSchedule-date" id="fbSchedule-date">
-                                        <br>
-                                        <label for="fbSchedule-time" class="event-title mt-2">Time</label>
-                                        <br>
-                                        <input type="time" name="fbSchedule-time" id="fbSchedule-time">
-                                    </div>
-                                </div>
-                                
-                                <div class="dropdown-divider"></div>
-
-                                <div class="drop-item">
-                                    <label for="instaSchedule">Instagram</label>
-                                    <input type="checkbox" name="schedule-insta" class="app-checkbox" id="instaSchedule" onclick="scheduletimedate(this)">
-                                    <div class="schdule-event">
-                                        <div class="dropdown-divider"></div>
-                                        <label for="fbSchedule-date"class="event-title">Date</label>
-                                        <br>
-                                        <input type="date" name="fbSchedule-date" id="fbSchedule-date">
-                                        <br>
-                                        <label for="fbSchedule-time" class="event-title mt-2">Time</label>
-                                        <br>
-                                        <input type="time" name="fbSchedule-time" id="fbSchedule-time">
-                                    </div>
-                                </div>
-
-                                <div class="dropdown-divider"></div>
-                                <div class="drop-item">
-                                    <button class="btn btn-success">Post</button>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div class="col-sm-6">
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-danger sbutton dropdown-toggle" id="single-schedule"> Single Schedule                            </button>
-                            <div class="single-schedule-dropdown-menu">
-                                <div class="schdule-event drop-item">
-                                    <div class="dropdown-divider"></div>
-                                    <label for="fbSchedule-date"class="event-title">Date</label>
-                                    <br>
-                                    <input type="date" name="fbSchedule-date" id="fbSchedule-date">
-                                    <br>
-                                    <label for="fbSchedule-time" class="event-title mt-2">Time</label>
-                                    <br>
-                                    <input type="time" name="fbSchedule-time" id="fbSchedule-time">
-                                </div>
-
-                                <div class="dropdown-divider"></div>
-
-                                <div class="drop-item">
-                                    <label for="fbSchedule">Facebook</label>
-                                    <input type="checkbox" name="schedule-fb" class="app-checkbox" id="fbSchedule" onclick="scheduletimedate(this)" >
-                                </div>
-
-                                <div class="drop-item">
-                                    <label for="lnSchedule">LinkedIn</label>
-                                    <input type="checkbox" name="schedule-ln" class="app-checkbox" id="lnSchedule" onclick="scheduletimedate(this)"> 
-                                </div>
-
-                                <div class="drop-item">
-                                    <label for="instaSchedule">Instagram</label>
-                                    <input type="checkbox" name="schedule-insta" class="app-checkbox" id="instaSchedule" onclick="scheduletimedate(this)">
-                                </div>
-                                <div class="drop-item">
-                                    <button class="btn btn-success">Post</button>
-                                </div>
-                                
-                            </div>
-                        </div>
+        
+      <div class="container">
+        <div class="row">
+            <div class="col-md-2 ">
+              <button class="btn btn-default post-button mt-4" data-toggle="modal" data-target="#modal-for-postnow">
+                <div class="card bg-img-3 "> 
+                    <div class="card-content">
+                        <span class="card-icon">
+                            <i class='bx bx-plus-medical'></i>
+                        </span>
+                <span class="card-title">Post Now</span>
                     </div>
                 </div>
+              </button>
+
+              <!-- modal for post now -->
+              <div class="modal fade" id="modal-for-postnow" tabindex="-1" role="dialog" aria-labelledby="modal-for-postnow" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModalLongTitle">Post Now</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form-postnow" method="GET">
+                            <div class="postimgupload">
+                                <label for="posting">Upload Image</label>
+                                <div class="btn btn-primary">
+                                    <img src="{% static 'images/upload.png' %}" alt="Uplaod Image" height="50px" style="opacity: 0.8;">
+                                </div>
+                                <input type="file" name="postimg" id="postimg">
+                            </div>
+                            <div class="post-caption-container mt-3">
+                                <label for="postcaption">Your Caption</label>
+                                <textarea name="caption" id="postcaption" rows="4"></textarea>
+                            </div>
+
+                            <div class="shared-app mt-3">
+                                <h4 class="app-title">Share On</h4>
+
+                                <div class="share-app-types">
+                                    <div class="group" style="display: inline-grid;">
+                                        <div class="types-item btn btn-primary d-flex" for="fbSchedule" aria-labelledby="fbScheduled" onclick="pagedropdown(this)">
+                                            <i class='bx bxl-facebook-circle' style='color:white;padding-right:5px;font-size: 26px;'  ></i>
+                                            <span class="share-app-name">Facebook</span>
+                                            <i class='bx bxs-chevron-down' style='color:#ffffff;padding: 4px 2px;'  ></i>
+                                               
+                                        </div>
+                                        <div class="fbpages p-3 mt-2 pages-dropdown" id="fbpages" style="border: 1px solid rgba(0,0,0,.15);">
+
+                                        </div>
+                                    </div>
+
+                                    <div class="group" style="display:inline-grid">
+                                        <div class="types-item btn btn-primary d-flex" for="lnSchedule" aria-labelledby="lnScheduled" onclick="pagedropdown(this)">
+                                            <i class='bx bxl-linkedin' style='color:white;padding-right:5px;font-size: 26px;'  ></i>
+                                            <span class="share-app-name">LinkedIn</span>
+                                            <i class='bx bxs-chevron-down' style='color:#ffffff;padding: 4px 2px;'  ></i>
+                                               
+                                        </div>
+                                        <div class="lnpages pages-dropdown p-3 mt-2" id="lnpages" style="border: 1px solid rgba(0,0,0,.15);">
+                                                    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                      <button type="submit" class="btn btn-primary">Post Now</button>
+                    </div>
+                </form>
+                  </div>
+                </div>
+              </div>
+
+
+
+
 
             </div>
+            <div class="col-md-2 ">
+                <button class="btn btn-default post-button mt-4" data-toggle="modal" data-target="#modal-for-singleSchedule"  >
+                    <div class="card bg-img-3 ">
+                        <div class="card-content">
+                            <span class="card-icon">
+                                <i class='bx bx-plus-medical'></i>
+                            </span>
+                            <span class="card-title">Single Schedule</span>
+                        </div>
+                </button>
+
+                <!-- modal for single Schedule -->
+                <div class="modal fade" id="modal-for-singleSchedule" tabindex="-1" role="dialog" aria-labelledby="modal-for-singleSchedule" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalLongTitle">Post Now</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="form-singleSchedule" method="GET">
+                                <div class="Scheduledatetime ">
+                                    <div class="date my-2 d-inline-block">
+                                        <label for="scheduledate">Date</label>
+                                        <br>
+                                        <input type="date" name="Schedule_Date" id="scheduledate">
+                                    </div>
+                                    <div class="time my-2 mx-2 d-inline-block">
+                                        <label for="scheduletime">Time</label>
+                                        <br>
+                                        <input type="time" name="Schedule_Time" id="scheduletime">
+                                    </div>
+                                </div>
+                                <div class="postimgupload">
+                                    <label for="posting">Upload Image</label>
+                                    <div class="btn btn-primary p-0">
+                                        <img src="{% static 'images/upload.png' %}" alt="Uplaod Image" height="50px" style="opacity: 0.8;padding: 0 8px;">
+                                        <input type="file" name="postimg" id="postimg">
+                                    </div>
+                                   
+                                </div>
+                                <div class="post-caption-container mt-3">
+                                    <label for="postcaption">Your Caption</label>
+                                    <textarea name="caption" id="postcaption" rows="4"></textarea>
+                                </div>
+    
+                                <div class="shared-app mt-3">
+                                    <h4 class="app-title">Share On</h4>
+    
+                                    <div class="share-app-types">
+                                        <div class="group" style="display: inline-grid;">
+                                            <div class="types-item btn btn-primary d-flex" for="fbSchedule" aria-labelledby="fbScheduled" onclick="pagedropdown(this)">
+                                                <i class='bx bxl-facebook-circle' style='color:white;padding-right:5px;font-size: 26px;'  ></i>
+                                                <span class="share-app-name">Facebook</span>
+                                                <i class='bx bxs-chevron-down' style='color:#ffffff;padding: 4px 2px;'  ></i>
+                                                   
+                                            </div>
+                                            <div class="fbpages p-3 mt-2 pages-dropdown" id="fbpages" style="border: 1px solid rgba(0,0,0,.15);">
+    
+                                            </div>
+                                        </div>
+    
+                                        <div class="group" style="display:inline-grid">
+                                            <div class="types-item btn btn-primary d-flex" for="lnSchedule" aria-labelledby="lnScheduled" onclick="pagedropdown(this)">
+                                                <i class='bx bxl-linkedin' style='color:white;padding-right:5px;font-size: 26px;'  ></i>
+                                                <span class="share-app-name">LinkedIn</span>
+                                                <i class='bx bxs-chevron-down' style='color:#ffffff;padding: 4px 2px;'  ></i>
+                                                   
+                                            </div>
+                                            <div class="lnpages pages-dropdown p-3 mt-2" id="lnpages" style="border: 1px solid rgba(0,0,0,.15);">
+                                                        
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                           
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                          <button type="submit" class="btn btn-primary">Schedule Post</button>
+                        </div>
+                    </form>
+                      </div>
+                    </div>
+                  </div>
+
+            </div>
+            <div class="col-md-2 ">
+                <button class="btn btn-default post-button mt-4">
+                    <div class="card bg-img-3 ">
+                        <div class="card-content">
+                            <span class="card-icon">
+                                <i class='bx bx-plus-medical'></i>
+                            </span>
+                            <span class="card-title">Random Schedule</span>
+                        </div>
+                    </div>
+                </button>
+            </div>
         </div>
-    </form>
+      </div>
 </div>
 {% endblock %}
 
