@@ -50,46 +50,117 @@
 }
 
 /* scheduling button */
+.bg-img-1{
+    background-image: url('../images/postbg2.png');
+    width: 100%;
+    height: 100px;
+    box-shadow: 0 0 5px 1px #e4e4e4b3;
+}
 
-.sbutton{
-    width: max-content;
-    border-radius: 0;
+.bg-img-2{
+    background-image: url('../images/postbg2.png');
+    width: 100%;
+    height: 100px;
+}
+
+.bg-img-3{
+    background-image: url('../images/postbg3.jpeg');
+    opacity: 0.8;
+    width: 100%;
+    height: 100px;
+}
+.bg-img-3:hover{
+    opacity: 1;
+}
+.card-content{
+    text-align: center;
+    padding: 10px 0;
+    color: white;
+
+}
+.card-content .card-icon{
+    text-align: center;
+    display: block;
+    font-size: 28px;
+}
+.card-content .card-title{
+    text-align: center;
+    display: block;
+}
+
+
+/* dropdown */
+#form-postnow label{
+    font-family: monospace;
+    font-weight: 600;
+    font-size: 14px;
+    padding-left: 12px;
+}
+.post-button{
+    width: 100%;
+    border: 0;
+    box-shadow: none;
+    outline: none;
+    padding: 0;
+}
+.postimgupload .btn{
+    width: 100%;
+    border-radius: 10px;
+    height: 60px;
+    z-index: 100;
     box-shadow: none;
 }
 
-.random-schedule-dropdown-menu,.single-schedule-dropdown-menu{
-    display: none;
+.postimgupload #postimg{
     position: absolute;
-    background: white; 
     left: 0;
-    width: 235px;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    z-index: 100;
-    transform: translate3d(0px, 42px, 0px);
-    padding: 0.5rem 0;
+    width: 100%;
+    padding: 1rem;
+    opacity: 0;
+}
+.post-caption-container textarea{
+    width: 100%;
+    resize: none;
+    border-radius: 16px;
+    border: 1.5px solid #c5c1c1;
+    box-shadow: none;
+    outline: none;
+    padding: 5px 10px;
+}
+.app-title{
+    font-family: monospace;
+    font-weight: 600;
+    font-size: 14px;
+    padding-left: 12px;
+}
+.types-item{
+    padding: 5px;
+    margin-right: 10px;
+    width: 154px;
+    justify-content: center;
+    font-weight: 600;
+}
+.types-item .logo{
+    width:30px;
+    height: 30px;
 }
 
-.drop-item{
-    display: block;
-    width: 100%;
-    padding: 0.25rem 1.5rem;
-    clear: both;
-    font-weight: 400;
-    color: #212529;
-    text-align: inherit;
-    white-space: nowrap;
-    background-color: transparent;
-    border: 0;
+.types-item input[type="checkbox"]{
+    margin: 0px 0 0 16px;
 }
-.app-checkbox {
-    position: absolute;
-    right: 30px;
-    margin: 6px 0;
+
+.pages-dropdown{
+    display:none
 }
-.event-title{
-    color: #717171f2;
-    font-weight: 500;
+.pages-dropdown.show{
+    display:block
 }
-.random-schedule-dropdown-menu .schdule-event{
-    display: none;
+
+.Scheduledatetime input{
+    width: 175px;
+    font-size: 14px;
+    padding-left: 8px;
+    border: 2px solid rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+    color: rgba(0, 0, 0, 0.65);
 }
