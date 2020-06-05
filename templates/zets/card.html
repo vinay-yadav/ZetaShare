@@ -35,7 +35,7 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                    <form id="form-postnow" method="POST">
+                    <form id="form-postnow" method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="postimgupload">
                             <label for="posting">Upload Image</label>

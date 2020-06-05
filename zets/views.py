@@ -1,4 +1,5 @@
 import datetime
+import threading
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
@@ -7,7 +8,8 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .forms import EditProfileForm
 from .models import Connections
-from .tokens import facebook_data, post_now
+from .tokens import facebook_data
+from .utils import post_linkedin, post_facebook
 
 
 @login_required(login_url='main:home')
@@ -32,7 +34,7 @@ def user_profile(request):
 def connections(request):
     if request.method == 'POST':
         facebook_data(request)
-        return JsonResponse({'msg': 'Connect App DOne'})
+        return JsonResponse({'msg': 'Connect App Done'})
 
     return render(request, 'zets/CreateApp.html')
 
@@ -40,7 +42,25 @@ def connections(request):
 @login_required(login_url='main:home')
 def card(request):
     if request.method == 'POST':
-        post_now(request)
+        facebook = []
+        linkedin = []
+
+        caption = request.POST.get('caption')
+        image = request.FILES.get('postimg')
+
+        media = [caption, image]
+
+        # posting on Facebook
+        if facebook:
+            fb_post = threading.Thread(target=post_facebook, args=[request, facebook, media])
+            fb_post.start()
+
+        # posting on LinkedIn
+        if linkedin:
+            linkedin_post = threading.Thread(target=post_linkedin, args=[request, linkedin, media])
+            linkedin_post.start()
+
+        print('Posted')
 
     return render(request, 'zets/card.html')
 

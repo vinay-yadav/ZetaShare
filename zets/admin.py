@@ -10,6 +10,7 @@ class SocialMediaAdmin(admin.ModelAdmin):
 @admin.register(Connections)
 class ConnectionsAdmin(admin.ModelAdmin):
     list_display = ['social', 'posting_id', 'page_name', 'added_on']
+    readonly_fields = ['posting_id', 'access_token']
 
 
 admin.site.register(Posts)
