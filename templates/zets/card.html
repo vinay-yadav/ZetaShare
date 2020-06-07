@@ -42,7 +42,7 @@
                                 <div class="btn btn-primary">
                                     <img src="{% static 'images/upload.png' %}" alt="Uplaod Image" height="50px" style="opacity: 0.8;">
                                 </div>
-                                <input type="file" name="postimg" id="postimg">
+                                <input type="file" name="postimg" id="postimg" onchange="compressedImg(event)" >
                             </div>
                             <div class="post-caption-container mt-3">
                                 <label for="postcaption">Your Caption</label>

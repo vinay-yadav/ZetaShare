@@ -32,3 +32,15 @@ function pagedropdown(data){
     }
     $(data).next().toggleClass('show')
 }
+
+function compressedImg(e){
+    const file = e.target.files[0]
+    console.log(file)
+    new ImageCompressor(file,{
+        quality:0.8,
+        success:function(result){
+             const newfile = new File(result,file.name)
+            console.log(newfile)
+        }
+    })
+}
