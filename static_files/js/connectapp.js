@@ -23,8 +23,8 @@ function getCookie(name) {
 // create app
 window.fbAsyncInit = function() {
     FB.init({
-        appId: '243240056787926',
-        // appId: '735133187228573',
+        // appId: '243240056787926',
+        appId: '735133187228573',
         cookie: true,
         xfbml: true,
         version: 'v6.0'
@@ -178,7 +178,7 @@ function createAppList(res) {
             'id': res.data[i].posting_id,
             'type': 'text',
             'placeholder': 'Account Name',
-            'onchange':'editpagename(this)',
+            'onchange':'editPageName(this)',
             'value': ''
         }
         if(res.data[i].page_name!== null){
@@ -227,8 +227,8 @@ function keyloop(element, attrs) {
     }
 }
 
-// function for disconnect app
 
+// function for disconnect app
 function disconnectApp(ref) {
     $.ajax({
         type: 'post',
@@ -241,29 +241,24 @@ function disconnectApp(ref) {
     })
 }
 
-//ajax for page name change
 
-function editpagename(data) {
+//ajax for page name change
+function editPageName(data) {
+    let page_name = data.value
     $.ajax({
-        type:'post',
-        url:'',
-        data:{
-                pid:data.id,
-                page_name:data.value
-                },
+        type: 'post',
+        url: '/app/connected/custom-page/',
+        data: {
+            pid: data.id,
+            page_name: page_name
+            },
+        headers: { "X-CSRFToken": getCookie('csrftoken') },
     })
 }
 
-// linkedin auth
 
+// linkedin auth
 function linkedInAuth(){
-    $.ajax({
-        type:'get',
-        contentType: "application/json",    
-        dataType:'jsonp',
-        url:'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=864p2i6fecc0u6&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fapp%2Flinkedin-oauth2%2Fcallback&state=oath-linkedin&scope=r_liteprofile,r_emailaddress,w_member_social',
-        success:function(res){
-            console.log(res)
-        }
-    })
+    const url = 'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=864p2i6fecc0u6&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fapp%2Flinkedin-oauth2%2Fcallback&state=oath-linkedin&scope=r_liteprofile,r_emailaddress,w_member_social'
+    window.open(url, '_blank', 'height=675, width=550, top=200, left=750')
 }
