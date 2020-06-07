@@ -19,8 +19,8 @@ function getCookie(name) {
 
 window.fbAsyncInit = function() {
     FB.init({
-        appId: '243240056787926',
-        // appId: '735133187228573',
+        // appId: '243240056787926',
+        appId: '735133187228573',
         cookie: true,
         xfbml: true,
         version: 'v6.0'

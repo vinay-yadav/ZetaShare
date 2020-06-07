@@ -12,4 +12,5 @@ urlpatterns = [
     path('linkedin-oauth2/callback/', linkedin_data, name="linkedin"),
     path('connected/fetch/', fetch_connect_app),
     path('connected/delete/', delete_connect_app),
+    path('connected/custom-page/', custom_page_name)
     ]

@@ -1,4 +1,5 @@
 import datetime
+import threading
 from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, HttpResponse
@@ -7,8 +8,8 @@ from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from .forms import EditProfileForm
 from .models import Connections
-from .tokens import facebook_data, post_now
-from ZetaShare.secrets import LINKEDIN_CLIENT_ID
+from .tokens import facebook_data
+from .utils import post_linkedin, post_facebook
 
 
 @login_required(login_url='main:home')
@@ -33,20 +34,34 @@ def user_profile(request):
 def connections(request):
     if request.method == 'POST':
         facebook_data(request)
-        return JsonResponse({'msg': 'Connect App DOne'})
+        return JsonResponse({'msg': 'Connect App Done'})
 
-    linkedin_connect = f'https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id={LINKEDIN_CLIENT_ID}&redirect_uri=https%3A%2F%2Flocalhost%3A8000%2Fapp%2Flinkedin-oauth2%2Fcallback&state=oath-linkedin&scope=r_liteprofile,r_emailaddress,w_member_social'
-    context = {
-        'linkedin_connect': linkedin_connect
-    }
-    return render(request, 'zets/CreateApp.html', context)
+    return render(request, 'zets/CreateApp.html')
 
 
 @login_required(login_url='main:home')
 def card(request):
     if request.method == 'POST':
-        content = request.POST.get('post-content')
-        post_now(request, msg=content)
+        facebook = []
+        linkedin = []
+
+        caption = request.POST.get('caption')
+        image = request.FILES.get('postimg')
+
+        media = [caption, image]
+
+        # posting on Facebook
+        if facebook:
+            fb_post = threading.Thread(target=post_facebook, args=[request, facebook, media])
+            fb_post.start()
+
+        # posting on LinkedIn
+        if linkedin:
+            linkedin_post = threading.Thread(target=post_linkedin, args=[request, linkedin, media])
+            linkedin_post.start()
+
+        print('Posted')
+
     return render(request, 'zets/card.html')
 
 
@@ -90,10 +105,19 @@ def fetch_connect_app(request):
 
 @login_required(login_url='main:home')
 def delete_connect_app(request):
-    pid = request.POST.get('pid')
-    posting_id = force_text(urlsafe_base64_decode(pid))
+    posting_id = force_text(urlsafe_base64_decode(request.POST.get('pid')))
     qs = Connections.objects.get(posting_id=posting_id, social__user=request.user)
     qs.delete()
 
     data = fetch_connect_app(request)
     return data
+
+
+@login_required(login_url='main:home')
+def custom_page_name(request):
+    page_name = request.POST.get('page_name'),
+    pid = force_text(urlsafe_base64_decode(request.POST.get('pid')))
+    qs = Connections.objects.get(social__user=request.user, posting_id=pid)
+    qs.page_name = page_name[0]
+    qs.save()
+    return JsonResponse({'msg': 'Complete'}, status=201)

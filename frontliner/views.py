@@ -163,12 +163,14 @@ def social_auth(request):
 
         try:
             user = User.objects.get(username=username)
+            login(request, user)
             print('login')
-            obj = SocialMedia.objects.get(social_id=username)
+            obj = SocialMedia.objects.get(social_id=username, user=request.user)
 
         except (User.DoesNotExist, SocialMedia.DoesNotExist):
             user = User(username=username, first_name=name[0], last_name=name[1], email=email)
             user.save()
+            login(request, user)
             print('signup')
             obj = SocialMedia()
 
@@ -181,5 +183,4 @@ def social_auth(request):
         obj.profile_pic = profile_pic
         obj.save()
 
-        login(request, user)
         return JsonResponse({'msg': 'completed', 'url': '/app/dashboard/'})
