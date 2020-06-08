@@ -10,173 +10,195 @@
 
 {% block content %}
 <div class="wrapper">
-  <div class="container">
-    <div class="row">
-        <div class="col-md-2 ">
-          <button class="btn btn-default post-button mt-4" data-toggle="modal" data-target="#modal-for-postnow">
-            <div class="card bg-img-3 ">
-                <div class="card-content">
-                    <span class="card-icon">
-                        <i class='bx bx-plus-medical'></i>
-                    </span>
-                    <span class="card-title">Post Now</span>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2 ">
+                <button class="btn btn-default post-button mt-4" data-toggle="modal" data-target="#modal-for-postnow">
+                    <div class="card bg-img-3 ">
+                        <div class="card-content">
+                            <span class="card-icon">
+                                <i class='bx bx-plus-medical'></i>
+                            </span>
+                            <span class="card-title">Post Now</span>
+                        </div>
+                    </div>
+                </button>
+
+                <!-- modal for post now -->
+                <div class="modal fade" id="modal-for-postnow" tabindex="-1" role="dialog"
+                    aria-labelledby="modal-for-postnow" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Post Now</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="form-postnow" method="POST" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    <div class="postimgupload">
+                                        <label for="posting">Upload Image</label>
+                                        <div class="btn btn-primary">
+                                            <img src="{% static 'images/upload.png' %}" alt="Uplaod Image" height="50px"
+                                                style="opacity: 0.8;" />
+                                        </div>
+                                        <input type="file" name="postimg" id="postimg">
+                                    </div>
+                                    <div class="post-caption-container mt-3">
+                                        <label for="postcaption">Your Caption</label>
+                                        <textarea name="caption" id="postcaption" rows="4"></textarea>
+                                    </div>
+
+                                    <div class="shared-app mt-3">
+                                        <h4 class="app-title">Share On</h4>
+
+                                        <div class="share-app-types">
+                                            <div class="group" style="display: inline-grid;">
+                                                <div class="types-item btn btn-primary d-flex" for="fbSchedule"
+                                                    aria-labelledby="fbScheduled" onclick="pagedropdown(this)">
+                                                    <i class='bx bxl-facebook-circle'
+                                                        style='color:white;padding-right:5px;font-size: 26px;'></i>
+                                                    <span class="share-app-name">Facebook</span>
+                                                    <i class='bx bxs-chevron-down'
+                                                        style='color:#ffffff;padding: 4px 2px;'></i>
+
+                                                </div>
+                                                <div class="fbpages p-3 mt-2 pages-dropdown" id="fbpages"
+                                                    style="border: 1px solid rgba(0,0,0,.15);">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="group" style="display:inline-grid">
+                                                <div class="types-item btn btn-primary d-flex" for="lnSchedule"
+                                                    aria-labelledby="lnScheduled" onclick="pagedropdown(this)">
+                                                    <i class='bx bxl-linkedin'
+                                                        style='color:white;padding-right:5px;font-size: 26px;'></i>
+                                                    <span class="share-app-name">LinkedIn</span>
+                                                    <i class='bx bxs-chevron-down'
+                                                        style='color:#ffffff;padding: 4px 2px;'></i>
+
+                                                </div>
+                                                <div class="lnpages pages-dropdown p-3 mt-2" id="lnpages"
+                                                    style="border: 1px solid rgba(0,0,0,.15);">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Post Now</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-          </button>
 
-          <!-- modal for post now -->
-          <div class="modal fade" id="modal-for-postnow" tabindex="-1" role="dialog" aria-labelledby="modal-for-postnow" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Post Now</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                    <form id="form-postnow" method="POST" enctype="multipart/form-data">
-                        {% csrf_token %}
-                        <div class="postimgupload">
-                            <label for="posting">Upload Image</label>
-                            <div class="btn btn-primary">
-                                <img src="{% static 'images/upload.png' %}" alt="Uplaod Image" height="50px" style="opacity: 0.8;">
-                            </div>
-                            <input type="file" name="postimg" id="postimg">
+            <div class="col-md-2 ">
+                <button class="btn btn-default post-button mt-4" data-toggle="modal"
+                    data-target="#modal-for-singleSchedule">
+                    <div class="card bg-img-3 ">
+                        <div class="card-content">
+                            <span class="card-icon">
+                                <i class='bx bx-plus-medical'></i>
+                            </span>
+                            <span class="card-title">Single Schedule</span>
                         </div>
-                        <div class="post-caption-container mt-3">
-                            <label for="postcaption">Your Caption</label>
-                            <textarea name="caption" id="postcaption" rows="4"></textarea>
-                        </div>
-
-                        <div class="shared-app mt-3">
-                            <h4 class="app-title">Share On</h4>
-
-                            <div class="share-app-types">
-                                <div class="group" style="display: inline-grid;">
-                                    <div class="types-item btn btn-primary d-flex" for="fbSchedule" aria-labelledby="fbScheduled" onclick="pagedropdown(this)">
-                                        <i class='bx bxl-facebook-circle' style='color:white;padding-right:5px;font-size: 26px;'  ></i>
-                                        <span class="share-app-name">Facebook</span>
-                                        <i class='bx bxs-chevron-down' style='color:#ffffff;padding: 4px 2px;'  ></i>
-
-                                    </div>
-                                    <div class="fbpages p-3 mt-2 pages-dropdown" id="fbpages" style="border: 1px solid rgba(0,0,0,.15);">
-
-                                    </div>
-                                </div>
-
-                                <div class="group" style="display:inline-grid">
-                                    <div class="types-item btn btn-primary d-flex" for="lnSchedule" aria-labelledby="lnScheduled" onclick="pagedropdown(this)">
-                                        <i class='bx bxl-linkedin' style='color:white;padding-right:5px;font-size: 26px;'  ></i>
-                                        <span class="share-app-name">LinkedIn</span>
-                                        <i class='bx bxs-chevron-down' style='color:#ffffff;padding: 4px 2px;'  ></i>
-
-                                    </div>
-                                    <div class="lnpages pages-dropdown p-3 mt-2" id="lnpages" style="border: 1px solid rgba(0,0,0,.15);">
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                          <button type="submit" class="btn btn-primary">Post Now</button>
-                        </div>
-                    </form>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="col-md-2 ">
-            <button class="btn btn-default post-button mt-4" data-toggle="modal" data-target="#modal-for-singleSchedule"  >
-                <div class="card bg-img-3 ">
-                    <div class="card-content">
-                        <span class="card-icon">
-                            <i class='bx bx-plus-medical'></i>
-                        </span>
-                        <span class="card-title">Single Schedule</span>
                     </div>
-                </div>
-            </button>
+                </button>
 
-            <!-- modal for single Schedule -->
-            <div class="modal fade" id="modal-for-singleSchedule" tabindex="-1" role="dialog" aria-labelledby="modal-for-singleSchedule" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h5 class="modal-title" id="exampleModalLongTitle">Post Now</h5>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="form-singleSchedule" method="GET">
-                            <div class="Scheduledatetime ">
-                                <div class="date my-2 d-inline-block">
-                                    <label for="scheduledate">Date</label>
-                                    <br>
-                                    <input type="date" name="Schedule_Date" id="scheduledate">
-                                </div>
-                                <div class="time my-2 mx-2 d-inline-block">
-                                    <label for="scheduletime">Time</label>
-                                    <br>
-                                    <input type="time" name="Schedule_Time" id="scheduletime">
-                                </div>
+                <!-- modal for single Schedule -->
+                <div class="modal fade" id="modal-for-singleSchedule" tabindex="-1" role="dialog"
+                    aria-labelledby="modal-for-singleSchedule" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLongTitle">Post Now</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-
-                            <div class="postimgupload">
-                                <label for="posting">Upload Image</label>
-                                <div class="btn btn-primary p-0">
-                                    <img src="{% static 'images/upload.png' %}" alt="Uplaod Image" height="50px" style="opacity: 0.8;padding: 0 8px;">
-                                    <input type="file" name="postimg" id="postimg" onchange="compressedImg(event)" >
-                                </div>
-                            </div>
-
-                            <div class="post-caption-container mt-3">
-                                <label for="postcaption">Your Caption</label>
-                                <textarea name="caption" id="postcaption" rows="4"></textarea>
-                            </div>
-
-                            <div class="shared-app mt-3">
-                                <h4 class="app-title">Share On</h4>
-
-                                <div class="share-app-types">
-                                    <div class="group" style="display: inline-grid;">
-                                        <div class="types-item btn btn-primary d-flex" for="fbSchedule" aria-labelledby="fbScheduled" onclick="pagedropdown(this)">
-                                            <i class='bx bxl-facebook-circle' style='color:white;padding-right:5px;font-size: 26px;'  ></i>
-                                            <span class="share-app-name">Facebook</span>
-                                            <i class='bx bxs-chevron-down' style='color:#ffffff;padding: 4px 2px;'  ></i>
-
+                            <div class="modal-body">
+                                <form id="form-singleSchedule" method="GET">
+                                    <div class="Scheduledatetime ">
+                                        <div class="date my-2 d-inline-block">
+                                            <label for="scheduledate">Date</label>
+                                            <br>
+                                            <input type="date" name="Schedule_Date" id="scheduledate" required>
                                         </div>
-                                        <div class="fbpages p-3 mt-2 pages-dropdown" id="fbpages" style="border: 1px solid rgba(0,0,0,.15);">
-
+                                        <div class="time my-2 mx-2 d-inline-block">
+                                            <label for="scheduletime">Time</label>
+                                            <br>
+                                            <input type="time" name="Schedule_Time" id="scheduletime" required>
                                         </div>
                                     </div>
 
-                                    <div class="group" style="display:inline-grid">
-                                        <div class="types-item btn btn-primary d-flex" for="lnSchedule" aria-labelledby="lnScheduled" onclick="pagedropdown(this)">
-                                            <i class='bx bxl-linkedin' style='color:white;padding-right:5px;font-size: 26px;'  ></i>
-                                            <span class="share-app-name">LinkedIn</span>
-                                            <i class='bx bxs-chevron-down' style='color:#ffffff;padding: 4px 2px;'  ></i>
-
-                                        </div>
-                                        <div class="lnpages pages-dropdown p-3 mt-2" id="lnpages" style="border: 1px solid rgba(0,0,0,.15);">
-
+                                    <div class="postimgupload">
+                                        <label for="posting">Upload Image</label>
+                                        <div class="btn btn-primary p-0">
+                                            <img src="{% static 'images/upload.png' %}" alt="Uplaod Image" height="50px"
+                                                style="opacity: 0.8;padding: 0 8px;">
+                                            <input type="file" name="postimg" id="postimg">
                                         </div>
                                     </div>
-                                </div>
-                            </div>
 
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                              <button type="submit" class="btn btn-primary">Schedule Post</button>
+                                    <div class="post-caption-container mt-3">
+                                        <label for="postcaption">Your Caption</label>
+                                        <textarea name="caption" id="postcaption" rows="4"></textarea>
+                                    </div>
+
+                                    <div class="shared-app mt-3">
+                                        <h4 class="app-title">Share On</h4>
+
+                                        <div class="share-app-types">
+                                            <div class="group" style="display: inline-grid;">
+                                                <div class="types-item btn btn-primary d-flex" for="fbSchedule"
+                                                    aria-labelledby="fbScheduled" onclick="pagedropdown(this)">
+                                                    <i class='bx bxl-facebook-circle'
+                                                        style='color:white;padding-right:5px;font-size: 26px;'></i>
+                                                    <span class="share-app-name">Facebook</span>
+                                                    <i class='bx bxs-chevron-down'
+                                                        style='color:#ffffff;padding: 4px 2px;'></i>
+
+                                                </div>
+                                                <div class="fbpages p-3 mt-2 pages-dropdown" id="fbpages"
+                                                    style="border: 1px solid rgba(0,0,0,.15);">
+
+                                                </div>
+                                            </div>
+
+                                            <div class="group" style="display:inline-grid">
+                                                <div class="types-item btn btn-primary d-flex" for="lnSchedule"
+                                                    aria-labelledby="lnScheduled" onclick="pagedropdown(this)">
+                                                    <i class='bx bxl-linkedin'
+                                                        style='color:white;padding-right:5px;font-size: 26px;'></i>
+                                                    <span class="share-app-name">LinkedIn</span>
+                                                    <i class='bx bxs-chevron-down'
+                                                        style='color:#ffffff;padding: 4px 2px;'></i>
+
+                                                </div>
+                                                <div class="lnpages pages-dropdown p-3 mt-2" id="lnpages"
+                                                    style="border: 1px solid rgba(0,0,0,.15);">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary">Schedule Post</button>
+                                    </div>
+                                </form>
                             </div>
-                        </form>
+                        </div>
                     </div>
-                  </div>
                 </div>
             </div>
 
@@ -194,7 +216,7 @@
             </div>
         </div>
     </div>
-  </div>
+</div>
 </div>
 {% endblock %}
 
