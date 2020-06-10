@@ -5,6 +5,7 @@ $(document).ready(function () {
         url: '/app/connected/fetch/',
         async: false,
         success: function (res) {
+            console.log(res)
             for (let i = 0; i < res.data.length; i++) {
                 if (res.data[i].provider === 'Facebook') {
 
@@ -21,7 +22,7 @@ $(document).ready(function () {
                 if (res.data[i].provider === 'LinkedIn') {
                     $('#form-postnow .lnpages').append(`<div class="page">
                     <label for="posting-${i}" style="font-weight: 700;width:100px;overflow:hidden; font-family: sans-serif;font-size: 12px;letter-spacing: 0.4px;">${res.data[i].page_name}</label>
-                    <input class="ml-4" type="checkbox" name="postingId" id="posting-${i}" value="${res.data[i].posting_id}" style="float:right">
+                    <input class="ml-4" type="checkbox" name="postingId" id="posting-${i}" value="posting-${i}" style="float:right">
                 </div> `)
 
                     $('#form-singleSchedule .lnpages').append(`<div class="page">
@@ -65,11 +66,11 @@ $('#form-postnow').submit(function () {
         app_LinkedIn: [],
         date: Date.now()
     }
-    if ($('#postimg').val() != '') {
+    if ($('#postimg').val() !== '') {
         compressedImg(formdata)
     }
 
-    if ($('#postcaption').val() != '') {
+    if ($('#postcaption').val() !== '') {
         formdata.post_caption = $('#postcaption').val()
     }
 
@@ -79,12 +80,9 @@ $('#form-postnow').submit(function () {
         }
     }
 
-    for (let j = 0; j < $('#lnpages').children().length; j++) {
-        if ($('#posting-' + j).is('checked')) {
-            let id = {
-                posting_id: $('#posting-' + j).val()
-            }
-            formdata.app_LinkedIn.push(id)
+    for (let j = $('#fbpages').children().length; j < $('#lnpages').children().length + $('#fbpages').children().length; j++) {
+        if ($('#posting-' + j).is(":checked")) {
+            formdata.app_LinkedIn.push($('#posting-' + j).val())
         }
     }
 
@@ -92,7 +90,10 @@ $('#form-postnow').submit(function () {
     $.ajax({
         type: 'post',
         data: formdata,
-        url: 'example.com',
+        url: '/app/create-zets/',
+        headers: {
+            "X-CSRFToken": getCookie('csrftoken')
+        },
         async: false,
         success: function (res) {
             // after submit code
@@ -125,19 +126,16 @@ $('#form-singleSchedule').submit(function () {
         }
     }
 
-    for (let j = 0; j < $('#lnpages').children().length; j++) {
+    for (let j = $('#fbpages').children().length; j < $('#lnpages').children().length + $('#fbpages').children().length; j++) {
         if ($('#singleposting-' + j).is('checked')) {
-            let id = {
-                posting_id: $('#singleposting-' + j).val()
-            }
-            formdata.app_LinkedIn.push(id)
+            formdata.app_LinkedIn.push($('#singleposting-' + j).val())
         }
     }
     console.log(formdata)
     $.ajax({
         type: 'post',
         data: formdata,
-        url: 'example.com',
+        url: '/app/create-zets/',
         async: false,
         success: function (res) {
             // after submit code

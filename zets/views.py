@@ -41,26 +41,31 @@ def connections(request):
 
 @login_required(login_url='main:home')
 def card(request):
-    if request.method == 'POST':
-        facebook = []
-        linkedin = []
+    facebook = request.POST.get('app_Facebook')         
+    linkedin = request.POST.get('app_LinkedIn')         
+    caption = request.POST.get('post_caption')         
+    img = request.POST.get('post_img')          
+    print(facebook, linkedin, caption, img)
+    # if request.method == 'POST':
+    #     facebook = []
+    #     linkedin = []
 
-        caption = request.POST.get('caption')
-        image = request.FILES.get('postimg')
+    #     caption = request.POST.get('caption')
+    #     image = request.FILES.get('postimg')
 
-        media = [caption, image]
+    #     media = [caption, image]
 
-        # posting on Facebook
-        if facebook:
-            fb_post = threading.Thread(target=post_facebook, args=[request, facebook, media])
-            fb_post.start()
+    #     # posting on Facebook
+    #     if facebook:
+    #         fb_post = threading.Thread(target=post_facebook, args=[request, facebook, media])
+    #         fb_post.start()
 
-        # posting on LinkedIn
-        if linkedin:
-            linkedin_post = threading.Thread(target=post_linkedin, args=[request, linkedin, media])
-            linkedin_post.start()
+    #     # posting on LinkedIn
+    #     if linkedin:
+    #         linkedin_post = threading.Thread(target=post_linkedin, args=[request, linkedin, media])
+    #         linkedin_post.start()
 
-        print('Posted')
+    #     print('Posted')
 
     return render(request, 'zets/card.html')
 
