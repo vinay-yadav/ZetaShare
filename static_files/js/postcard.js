@@ -42,8 +42,8 @@ function pagedropdown(data) {
     $(data).next().toggleClass('show')
 }
 
-// image compression
 
+// image compression
 function compressedImg(formdata) {
     const file = document.getElementById('postimg').files[0]
     new ImageCompressor(file, {
@@ -57,19 +57,20 @@ function compressedImg(formdata) {
 
 }
 
+
 // submit form
 $('#form-postnow').submit(function () {
     event.preventDefault()
-    var formdata = {
+    let formdata = {
         app_Facebook: [],
         app_LinkedIn: [],
         date: Date.now()
-    }
-    if ($('#postimg').val() != '') {
+    };
+    if ($('#postimg').val() !== '') {
         compressedImg(formdata)
     }
 
-    if ($('#postcaption').val() != '') {
+    if ($('#postcaption').val() !== '') {
         formdata.post_caption = $('#postcaption').val()
     }
 
@@ -80,11 +81,8 @@ $('#form-postnow').submit(function () {
     }
 
     for (let j = 0; j < $('#lnpages').children().length; j++) {
-        if ($('#posting-' + j).is('checked')) {
-            let id = {
-                posting_id: $('#posting-' + j).val()
-            }
-            formdata.app_LinkedIn.push(id)
+        if ($('#posting-' + j).is(':checked')) {
+            formdata.app_LinkedIn.push($('#posting-' + j).val())
         }
     }
 
@@ -92,8 +90,8 @@ $('#form-postnow').submit(function () {
     $.ajax({
         type: 'post',
         data: formdata,
-        url: 'example.com',
-        async: false,
+        url: '/app/create-zets/',
+        headers: { "X-CSRFToken": getCookie('csrftoken') },
         success: function (res) {
             // after submit code
         }
@@ -101,21 +99,19 @@ $('#form-postnow').submit(function () {
 })
 
 //  single post
-
 $('#form-singleSchedule').submit(function () {
     event.preventDefault()
-    var formdata = {
+    let formdata = {
         schedule_date: $('#scheduledate').val(),
         schedule_time: $('#scheduletime').val(),
         app_Facebook: [],
-        app_LinkedIn: [],
-        date: Date.now()
+        app_LinkedIn: []
     }
-    if ($('#postimg').val() != '') {
+    if ($('#postimg').val() !== '') {
         compressedImg(formdata)
     }
 
-    if ($('#postcaption').val() != '') {
+    if ($('#postcaption').val() !== '') {
         formdata.post_caption = $('#postcaption').val()
     }
 
