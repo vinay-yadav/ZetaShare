@@ -41,32 +41,30 @@ def connections(request):
 
 @login_required(login_url='main:home')
 def card(request):
-    facebook = request.POST.get('app_Facebook')         
-    linkedin = request.POST.get('app_LinkedIn')         
-    caption = request.POST.get('post_caption')         
-    img = request.POST.get('post_img')          
-    print(facebook, linkedin, caption, img)
-    # if request.method == 'POST':
-    #     facebook = []
-    #     linkedin = []
+    if request.method == 'POST':
+        facebook = [force_text(urlsafe_base64_decode(x)) for x in request.POST.getlist('app_Facebook[]')]
+        linkedin = [force_text(urlsafe_base64_decode(x)) for x in request.POST.getlist('app_LinkedIn[]')]
+        caption = request.POST.get('post_caption')
+        img = request.FILES.get('post_img.name')
 
-    #     caption = request.POST.get('caption')
-    #     image = request.FILES.get('postimg')
+        print(facebook, linkedin, caption, img)
 
-    #     media = [caption, image]
-
-    #     # posting on Facebook
-    #     if facebook:
-    #         fb_post = threading.Thread(target=post_facebook, args=[request, facebook, media])
-    #         fb_post.start()
-
-    #     # posting on LinkedIn
-    #     if linkedin:
-    #         linkedin_post = threading.Thread(target=post_linkedin, args=[request, linkedin, media])
-    #         linkedin_post.start()
-
-    #     print('Posted')
-
+        # caption = request.POST.get('caption')
+        # image = request.FILES.get('postimg')
+        #
+        # media = [caption, image]
+        #
+        # # posting on Facebook
+        # if facebook:
+        #     fb_post = threading.Thread(target=post_facebook, args=[request, facebook, media])
+        #     fb_post.start()
+        #
+        # # posting on LinkedIn
+        # if linkedin:
+        #     linkedin_post = threading.Thread(target=post_linkedin, args=[request, linkedin, media])
+        #     linkedin_post.start()
+        #
+        # print('Posted')
     return render(request, 'zets/card.html')
 
 

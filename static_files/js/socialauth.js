@@ -15,8 +15,8 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// facebook login
 
+// facebook login
 window.fbAsyncInit = function() {
     FB.init({
         // appId: '243240056787926',

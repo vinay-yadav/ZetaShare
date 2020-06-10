@@ -67,8 +67,13 @@ def linkedin_data(request):
                                  'Authorization': f'Bearer {access_token["access_token"]}'
                              }).json()
 
+    user_id = user_data['id']
+
     try:
         social = SocialMedia.objects.get(user=request.user, provider='LinkedIn')
+        if user_id != social.social_id:
+            return HttpResponse('Not You')
+
     except SocialMedia.DoesNotExist:
         social = SocialMedia()
         social.user = request.user
@@ -77,8 +82,6 @@ def linkedin_data(request):
         social.first_name = user_data['localizedFirstName']
         social.last_name = user_data['localizedLastName']
         social.save()
-
-    user_id = user_data['id']
 
     try:
         obj = Connections.objects.get(social__user=request.user, posting_id=user_id)

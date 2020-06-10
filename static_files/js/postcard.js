@@ -43,8 +43,8 @@ function pagedropdown(data) {
     $(data).next().toggleClass('show')
 }
 
-// image compression
 
+// image compression
 function compressedImg(formdata) {
     const file = document.getElementById('postimg').files[0]
     new ImageCompressor(file, {
@@ -58,14 +58,15 @@ function compressedImg(formdata) {
 
 }
 
+
 // submit form
 $('#form-postnow').submit(function () {
     event.preventDefault()
-    var formdata = {
+    let formdata = {
         app_Facebook: [],
         app_LinkedIn: [],
-        date: Date.now()
     }
+
     if ($('#postimg').val() !== '') {
         compressedImg(formdata)
     }
@@ -102,21 +103,19 @@ $('#form-postnow').submit(function () {
 })
 
 //  single post
-
 $('#form-singleSchedule').submit(function () {
     event.preventDefault()
-    var formdata = {
+    let formdata = {
         schedule_date: $('#scheduledate').val(),
         schedule_time: $('#scheduletime').val(),
         app_Facebook: [],
-        app_LinkedIn: [],
-        date: Date.now()
+        app_LinkedIn: []
     }
-    if ($('#postimg').val() != '') {
+    if ($('#postimg').val() !== '') {
         compressedImg(formdata)
     }
 
-    if ($('#postcaption').val() != '') {
+    if ($('#postcaption').val() !== '') {
         formdata.post_caption = $('#postcaption').val()
     }
 
