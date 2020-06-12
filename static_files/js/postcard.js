@@ -22,7 +22,7 @@ $(document).ready(function () {
                 if (res.data[i].provider === 'LinkedIn') {
                     $('#form-postnow .lnpages').append(`<div class="page">
                     <label for="posting-${i}" style="font-weight: 700;width:100px;overflow:hidden; font-family: sans-serif;font-size: 12px;letter-spacing: 0.4px;">${res.data[i].page_name}</label>
-                    <input class="ml-4" type="checkbox" name="postingId" id="posting-${i}" value="posting-${i}" style="float:right">
+                    <input class="ml-4" type="checkbox" name="postingId" id="posting-${i}" value="${res.data[i].posting_id}" style="float:right">
                 </div> `)
 
                     $('#form-singleSchedule .lnpages').append(`<div class="page">
@@ -48,15 +48,19 @@ function pagedropdown(data) {
 function compressedImg(formdata) {
     const file = document.getElementById('postimg').files[0]
     new ImageCompressor(file, {
-        quality: 0.8,
+        quality: 0.5,
         success: function (result) {
-
+            console.log(result)
             formdata.post_img = result
-
+            console.log('here')
         }
     })
 
 }
+
+$('#postimg').on('change',function(){
+    
+})
 
 
 // submit form
@@ -86,20 +90,24 @@ $('#form-postnow').submit(function () {
             formdata.app_LinkedIn.push($('#posting-' + j).val())
         }
     }
+    if ($('#postimg').val() !== ''||$('#postcaption').val() !== '') {
+       return $.ajax({
+            type: 'post',
+            data: formdata,
+            url: '/app/create-zets/',
+            headers: {
+                "X-CSRFToken": getCookie('csrftoken')
+            },
+            async: false,
+            success: function (res) {
+                location.reload()
+            }
+        })
+    }
+        alert('please either upload img or enter caption')
+    
+    
 
-    console.log(formdata)
-    $.ajax({
-        type: 'post',
-        data: formdata,
-        url: '/app/create-zets/',
-        headers: {
-            "X-CSRFToken": getCookie('csrftoken')
-        },
-        async: false,
-        success: function (res) {
-            // after submit code
-        }
-    })
 })
 
 //  single post
@@ -131,13 +139,20 @@ $('#form-singleSchedule').submit(function () {
         }
     }
     console.log(formdata)
-    $.ajax({
-        type: 'post',
-        data: formdata,
-        url: '/app/create-zets/',
-        async: false,
-        success: function (res) {
-            // after submit code
-        }
-    })
+    if (formdata.post_img.length>0 || formdata.post_caption) {
+        $.ajax({
+            type: 'post',
+            data: formdata,
+            url: '/app/create-zets/',
+            headers: {
+                "X-CSRFToken": getCookie('csrftoken')
+            },
+            async: false,
+            success: function (res) {
+                location.reload()
+            }
+        })
+    }
+    alert('please either upload img or enter caption')
+
 })
