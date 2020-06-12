@@ -5,6 +5,7 @@ $(document).ready(function () {
         url: '/app/connected/fetch/',
         async: false,
         success: function (res) {
+            console.log(res)
             for (let i = 0; i < res.data.length; i++) {
                 if (res.data[i].provider === 'Facebook') {
 
@@ -47,15 +48,19 @@ function pagedropdown(data) {
 function compressedImg(formdata) {
     const file = document.getElementById('postimg').files[0]
     new ImageCompressor(file, {
-        quality: 0.8,
+        quality: 0.5,
         success: function (result) {
-
+            console.log(result)
             formdata.post_img = result
-
+            console.log('here')
         }
     })
 
 }
+
+$('#postimg').on('change',function(){
+    
+})
 
 
 // submit form
@@ -64,8 +69,8 @@ $('#form-postnow').submit(function () {
     let formdata = {
         app_Facebook: [],
         app_LinkedIn: [],
-        date: Date.now()
-    };
+    }
+
     if ($('#postimg').val() !== '') {
         compressedImg(formdata)
     }
@@ -80,22 +85,29 @@ $('#form-postnow').submit(function () {
         }
     }
 
-    for (let j = 0; j < $('#lnpages').children().length; j++) {
-        if ($('#posting-' + j).is(':checked')) {
+    for (let j = $('#fbpages').children().length; j < $('#lnpages').children().length + $('#fbpages').children().length; j++) {
+        if ($('#posting-' + j).is(":checked")) {
             formdata.app_LinkedIn.push($('#posting-' + j).val())
         }
     }
+    if ($('#postimg').val() !== ''||$('#postcaption').val() !== '') {
+       return $.ajax({
+            type: 'post',
+            data: formdata,
+            url: '/app/create-zets/',
+            headers: {
+                "X-CSRFToken": getCookie('csrftoken')
+            },
+            async: false,
+            success: function (res) {
+                location.reload()
+            }
+        })
+    }
+        alert('please either upload img or enter caption')
+    
+    
 
-    console.log(formdata)
-    $.ajax({
-        type: 'post',
-        data: formdata,
-        url: '/app/create-zets/',
-        headers: { "X-CSRFToken": getCookie('csrftoken') },
-        success: function (res) {
-            // after submit code
-        }
-    })
 })
 
 //  single post
@@ -121,22 +133,26 @@ $('#form-singleSchedule').submit(function () {
         }
     }
 
-    for (let j = 0; j < $('#lnpages').children().length; j++) {
+    for (let j = $('#fbpages').children().length; j < $('#lnpages').children().length + $('#fbpages').children().length; j++) {
         if ($('#singleposting-' + j).is('checked')) {
-            let id = {
-                posting_id: $('#singleposting-' + j).val()
-            }
-            formdata.app_LinkedIn.push(id)
+            formdata.app_LinkedIn.push($('#singleposting-' + j).val())
         }
     }
     console.log(formdata)
-    $.ajax({
-        type: 'post',
-        data: formdata,
-        url: 'example.com',
-        async: false,
-        success: function (res) {
-            // after submit code
-        }
-    })
+    if (formdata.post_img.length>0 || formdata.post_caption) {
+        $.ajax({
+            type: 'post',
+            data: formdata,
+            url: '/app/create-zets/',
+            headers: {
+                "X-CSRFToken": getCookie('csrftoken')
+            },
+            async: false,
+            success: function (res) {
+                location.reload()
+            }
+        })
+    }
+    alert('please either upload img or enter caption')
+
 })

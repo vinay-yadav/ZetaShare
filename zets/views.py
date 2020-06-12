@@ -65,7 +65,6 @@ def card(request):
         #     linkedin_post.start()
         #
         # print('Posted')
-
     return render(request, 'zets/card.html')
 
 
